@@ -255,9 +255,9 @@ function Chapter({ ch, flip }: { ch: (typeof content.chapters)[number]; flip: bo
       <div className={`grid items-center gap-8 md:grid-cols-5 ${flip ? 'md:[direction:rtl]' : ''}`}>
         <div className="md:col-span-3 md:[direction:ltr]">
           <Plate
-            src={asset(`${ch.id}.webp`)}
-            srcSet={asset(`${ch.id}-960.webp`)}
-            alt={ALT[ch.id] ?? ''}
+            src={asset(`chapter-${ch.id}.webp`)}
+            srcSet={asset(`chapter-${ch.id}-960.webp`)}
+            alt={ALT[`chapter-${ch.id}`] ?? ''}
             fallbackId={ch.id}
           />
         </div>

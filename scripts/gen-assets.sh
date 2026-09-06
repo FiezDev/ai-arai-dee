@@ -61,75 +61,7 @@ create_one() { # name
   echo "$n: job $job PENDING (est $est)"
 }
 
-wait_all() {
-  # poll each PENDING job via `generate get` (fast, parseable), download, finalize
-  local deadline=$(( $(date +%s) + 1200 ))  # 20 min hard budget for this pass
-  while :; do
-    local pend; pend=$(grep "| PENDING |" "$LEDGER" || true)
-    [[ -z "$pend" ]] && break
-    while IFS= read -r row; do
-      local n=$(echo "$row" | awk -F' *\| *' '{print $1}')
-      local job=$(echo "$row" | awk -F' *\| *' '{print $3}')
-      local j status url
-      j=$(higgsfield generate get "$job" --json 2>/dev/null || echo '{}')
-      status=$(echo "$j" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{try{console.log(JSON.parse(d).status||"")}catch{console.log("")}})')
-      url=$(echo "$j" | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{try{console.log(JSON.parse(d).result_url||"")}catch{console.log("")}})')
-      local credits=$(higgsfield account transactions --size 50 2>/dev/null | awk -v j="$job" '$0 ~ j || !seen { }' >/dev/null; echo "")
-      # credits: from transactions by model+date is unreliable per-row; use plan table
-      case "$n" in
-        hero) credits=6 ;;
-        *) credits=2 ;;
-      esac
-      if [[ "$status" == "completed" && -n "$url" ]]; then
-        local ext="${url##*.}"; ext=$(echo "$ext" | cut -d'?' -f1)
-        local dest="$RAW/$n.$ext"
-        curl -sL "$url" -o "$dest"
-        local ok_pattern="(png|jpeg|jpg|webp)"; [[ "$n" == "hero" ]] && ok_pattern="(mp4|webm)"
-        finalize_row() {
-          python3 - "$LEDGER" "$n" "$1" << 'PY'
-import sys
-p,n,c=sys.argv[1],sys.argv[2],sys.argv[3]
-rows=open(p).read().splitlines()
-out=[]
-for r in rows:
-    if f"| {n} |" in r and "| PENDING |" in r:
-        r=r.replace("| PENDING |", f"| {c} |")
-    out.append(r)
-open(p,'w').write("\n".join(out)+"\n")
-PY
-        }
-        if magic_ok "$dest" "$ok_pattern"; then
-          touch "$RAW/$n.done"
-          finalize_row "$credits"
-          echo "$n: DONE ($credits cr) → $dest ($(stat -f%z "$dest") bytes)"
-        else
-          finalize_row "UNKNOWN"
-          echo "$n: FAILED magic-byte check (row → UNKNOWN)"
-        fi
-      elif [[ "$status" == "failed" ]]; then
-        python3 - "$LEDGER" "$n" << 'PY'
-import sys
-p,n=sys.argv[1],sys.argv[2]
-rows=open(p).read().splitlines()
-out=[]
-for r in rows:
-    if f"| {n} |" in r and "| PENDING |" in r:
-        r=r.replace("| PENDING |", "| FAILED |")
-    out.append(r)
-open(p,'w').write("\n".join(out)+"\n")
-PY
-        echo "$n: job FAILED — row marked FAILED"
-      else
-        echo "$n: status=$status — still pending"
-      fi
-    done <<< "$pend"
-    pend=$(grep "| PENDING |" "$LEDGER" || true)
-    [[ -z "$pend" ]] && break
-    (( $(date +%s) > deadline )) && { echo "wait-all: 20min budget reached — rows still PENDING kept for next pass"; break; }
-    sleep 15
-  done
-  echo "wait-all complete."
-}
+wait_all() { node scripts/fetch-assets.mjs; }
 
 case "${1:-}" in
   hero|intro|chapter-content|chapter-work|chapter-learn|chapter-life) create_one "$1" ;;
