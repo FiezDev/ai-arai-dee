@@ -1,0 +1,29 @@
+---
+import '@fontsource/anuphan/600.css';
+import '@fontsource/anuphan/700.css';
+import '../styles/global.css';
+import Experience from '../components/Experience';
+---
+
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="ใช้ AI ทำอะไรดี — ไอเดียการใช้ AI ในชีวิตประจำวัน งาน การเรียน และการสร้างสรรค์ พร้อมตัวอย่างจริงที่ลองได้วันนี้"
+    />
+    <meta property="og:title" content="ใช้ AI ทำอะไรดี" />
+    <meta
+      property="og:description"
+      content="ไอเดียการใช้ AI ในชีวิตประจำวัน งาน การเรียน และการสร้างสรรค์"
+    />
+    <meta property="og:type" content="website" />
+    <title>ใช้ AI ทำอะไรดี</title>
+  </head>
+  <body class="grain">
+    <Experience client:load />
+  </body>
+</html>

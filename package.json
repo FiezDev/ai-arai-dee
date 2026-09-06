@@ -1,0 +1,28 @@
+{
+  "name": "ai-arai-dee",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ใช้ AI ทำอะไรดี — one-page Thai parallax SPA (Astro + framer-motion, media by Higgsfield)",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "probe": "node scripts/probe.mjs"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.2.0",
+    "@fontsource/anuphan": "^5.2.5",
+    "@tailwindcss/vite": "^4.1.0",
+    "astro": "^5.7.0",
+    "framer-motion": "^12.7.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "playwright": "^1.52.0"
+  }
+}

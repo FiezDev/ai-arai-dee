@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+docs/spec/
+docsbackup/
+playwright-report/
+test-results/
+.DS_Store
+ui-review-report.md
