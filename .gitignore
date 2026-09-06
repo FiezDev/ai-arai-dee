@@ -7,3 +7,5 @@ playwright-report/
 test-results/
 .DS_Store
 ui-review-report.md
+assets-raw/
+.reviews/
