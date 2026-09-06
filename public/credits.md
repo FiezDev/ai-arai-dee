@@ -22,3 +22,8 @@ chapter-content | nano_banana_pro | 039320d2-71bb-4d98-b35a-fce66cae131a | 2 | C
 chapter-work | nano_banana_pro | 57a72556-c2a8-4639-90d8-73a00626a05b | 2 | Cinematic wide shot of Bangkok skyline at dusk from a dark modern office window, warm amber city lights against deep ink-indigo twilight, lone desk silhouette in foreground, film grain, photoreal, negative space, no text, no watermark
 chapter-learn | nano_banana_pro | 0df6b344-67dd-40e6-a1f3-5bd3b00c242f | 2 | Cinematic scene of a student studying at night, soft warm amber holographic glow of floating knowledge particles above the desk, deep ink-indigo room, film grain, photoreal, wide composition, negative space, no text, no watermark
 chapter-life | nano_banana_pro | 467b534d-2928-4fbd-82c1-aea98fc47720 | 2 | Cinematic cozy Thai home kitchen before dawn, warm amber glow from a smart speaker and window dawn light, deep ink-indigo shadows, steam rising from a coffee cup, film grain, photoreal, wide negative space, no text, no watermark
+
+## ผลการตรวจสอบ (reconciliation)
+
+- งานของหน้าเว็บนี้: 6 jobs (hero video + 5 ภาพ) = 16 credits · ยอดก่อนเริ่ม 889.57 → ที่ควรเหลือ 873.57 ✔ ตรงกับ ledger
+- ระหว่างช่วงสร้างเว็บ มีรายการใช้ 32.5 credits (GPT Image 2.0 ×5, 12:32–12:44) ที่ไม่ได้มาจาก pipeline ของหน้าเว็บนี้ (สคริปต์ใช้แค่ nano_banana_pro + veo3_1_lite เท่านั้น) — โปรดตรวจสอบกับ session อื่นที่ใช้บัญชีเดียวกัน
