@@ -137,7 +137,7 @@ function Hero() {
   const heroY = useTransform(scrollY, [0, 800], [0, -220]);
   const video = asset('hero-540.mp4') || asset('hero.mp4') || asset('hero.webm');
   const poster = asset('hero-poster.jpg');
-  const words = ['ใช้', 'AI', 'ทำอะไรดี'];
+  const words = content.hero.headline.split(' '); // single source: content.ts
 
   // WCAG 2.2.2 (A): autoplaying motion needs a pause; under reduced-motion render
   // the still poster instead of autoplaying video (review finding, critical).

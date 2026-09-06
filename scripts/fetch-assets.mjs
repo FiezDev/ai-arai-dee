@@ -4,7 +4,7 @@
 // loop until no PENDING remain or budget (20 min) hits. Replaces the bash wait_all
 // (same state machine, design/ai-arai-dee__06-operations.md).
 import { execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync, mkdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, renameSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -49,34 +49,34 @@ for (;;) {
     if (status === 'completed' && url) {
       const ext = url.split('.').pop().split('?')[0];
       const dest = join(rawDir, `${name}.${ext}`);
+      const isMagic = (b) =>
+        (b[0] === 0x89 && b[1] === 0x50) || (b[0] === 0xff && b[1] === 0xd8) ||
+        (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46) ||
+        (b[4] === 0x66 && b[5] === 0x74 && b[6] === 0x79 && b[7] === 0x70) ||
+        (b[0] === 0x1a && b[1] === 0x45 && b[2] === 0xdf && b[3] === 0xa3);
       let buf;
+      let reused = false;
       try {
-        const st = statSync(dest);
-        buf = st.size > 1024 ? readFileSync(dest) : Buffer.from(await (await fetch(url)).arrayBuffer());
-      } catch {
-        buf = Buffer.from(await (await fetch(url)).arrayBuffer());
-      }
+        const existing = readFileSync(dest);
+        if (existing.length > 1024 && isMagic(existing)) { buf = existing; reused = true; }
+      } catch {}
+      if (!buf) buf = Buffer.from(await (await fetch(url)).arrayBuffer());
       const pattern = name === 'hero' ? SNIFF.hero : SNIFF.default;
       if (!pattern.test(dest)) {
         writeFileSync(ledgerPath, mark(rows, name, 'UNKNOWN').join('\n'));
         console.log(`${name}: content-type/extension rejected (${dest}) — row UNKNOWN`);
         continue;
       }
-      // magic bytes: PNG/JPEG/WebP/MP4 signatures
-      const magic =
-        (buf[0] === 0x89 && buf[1] === 0x50) || // PNG/WebP (RIFF handled below)
-        (buf[0] === 0xff && buf[1] === 0xd8) || // JPEG
-        (buf[0] === 0x52 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x46) || // RIFF/WebP
-        (buf[4] === 0x66 && buf[5] === 0x74 && buf[6] === 0x79 && buf[7] === 0x70) || // MP4 ftyp
-        (buf[0] === 0x1a && buf[1] === 0x45 && buf[2] === 0xdf && buf[3] === 0xa3); // webm
-      writeFileSync(dest, buf);
       const credits = CREDITS[name] ?? 'UNKNOWN';
-      if (magic) {
+      if (isMagic(buf)) {
+        writeFileSync(dest + '.tmp', buf);
+        renameSync(dest + '.tmp', dest);
+        writeFileSync(join(rawDir, `${name}.done`), String(Date.now()));
         writeFileSync(ledgerPath, finalize(rows, name, credits).join('\n'));
-        console.log(`${name}: DONE (${credits} cr, ${(buf.length / 1024 / 1024).toFixed(2)} MB) → ${dest}`);
+        console.log(`${name}: DONE (${credits} cr, ${(buf.length / 1024 / 1024).toFixed(2)} MB${reused ? ', reused verified file' : ''}) → ${dest}`);
       } else {
         writeFileSync(ledgerPath, mark(rows, name, 'UNKNOWN').join('\n'));
-        console.log(`${name}: magic-byte check FAILED — saved ${dest} but row UNKNOWN`);
+        console.log(`${name}: magic-byte check FAILED — dest untouched, row UNKNOWN`);
       }
     } else if (status === 'failed') {
       writeFileSync(ledgerPath, mark(rows, name, 'FAILED').join('\n'));

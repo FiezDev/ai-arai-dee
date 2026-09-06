@@ -101,10 +101,15 @@ async function main() {
     (await page.title()).includes('ใช้ AI ทำอะไรดี') ? ok('title') : fail('title', await page.title());
     (await page.getAttribute('html', 'lang')) === 'th' ? ok('lang=th') : fail('lang', 'not th');
 
-    // sections
-    const sectionCount = await page.locator('[data-section]').count();
-    sectionCount >= MIN_SECTIONS ? ok(`sections ${sectionCount} >= ${MIN_SECTIONS}`)
-      : fail('sections', `${sectionCount} < ${MIN_SECTIONS}`);
+    // sections — EXACT ids (an error boundary's fallback section must not count)
+    const EXPECTED = ['hero', 'intro', 'chapter-content', 'chapter-work', 'chapter-learn', 'chapter-life', 'howto', 'cta'];
+    const ids = await page.evaluate(() => [...document.querySelectorAll('[data-section]')].map((el) => el.getAttribute('data-section')));
+    const missing = EXPECTED.filter((id) => !ids.includes(id));
+    const errored = ids.filter((id) => id === 'error');
+    const sectionCount = ids.length - errored.length;
+    sectionCount >= MIN_SECTIONS && missing.length === 0 && errored.length === 0
+      ? ok(`sections ${sectionCount} (all expected ids present, none errored)`)
+      : fail('sections', `count=${sectionCount} missing=[${missing}] errored=[${errored}] got=[${ids}]`);
 
     // wait for hydration, then scroll through the page so lazy media loads + reveals fire
     await page.waitForTimeout(1200);

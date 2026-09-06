@@ -18,8 +18,9 @@ mkdir -p "$RAW" src/assets
 balance() { higgsfield account status --json 2>/dev/null | node -e 'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{try{const j=JSON.parse(d);const s=JSON.stringify(j);const m=s.match(/"credits"\s*:\s*"?([\d.]+)/)||s.match(/([\d.]+)\s*credits/);console.log(m?m[1]:"unknown")}catch{console.log("unknown")}})'; }
 spent() { awk -F' *\\| *' '/\|/ && $4 ~ /^[0-9.]+$/ {s+=$4} END{printf "%.2f", s+0}' "$LEDGER"; }
 preflight() {
-  local s=$(spent); local b=$(balance)
-  echo "pre-flight: spent=$s balance=$b"
+  local s=$(spent); local b=$(balance); local a=$(actual_spend)
+  echo "pre-flight: ledger=$s today_actual_spend=$a balance=$b"
+  awk "BEGIN{exit !($a >= $CAP)}" && { echo "ABORT: today actual spend $a ≥ cap $CAP"; exit 1; } || true
   awk "BEGIN{exit !($s >= $CAP)}" && { echo "ABORT: cumulative spend $s ≥ cap $CAP"; exit 1; }
   [[ "$b" == "unknown" ]] && { echo "ABORT: balance unreadable"; exit 1; }
   awk "BEGIN{exit !($b < $CAP)}" && { echo "ABORT: balance $b < cap $CAP"; exit 1; }
