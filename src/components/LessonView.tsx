@@ -1,0 +1,213 @@
+import { MotionConfig } from 'framer-motion';
+import { lessons } from '../lessons';
+import { Boundary, Nav, Plate, PromptCard, Figure, Reveal, ScrollProgress, asset } from './ui';
+
+type Lesson = (typeof lessons)[number];
+
+function QA({ q, a, n }: { q: string; a: string; n: number }) {
+  return (
+    <div
+      className="rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface))] p-6"
+      style={{ boxShadow: '0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3)' }}
+    >
+      <div className="flex items-start gap-4">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[hsl(var(--accent)/0.15)] text-sm font-bold text-[hsl(var(--accent))]">
+          {n}
+        </div>
+        <div>
+          <p className="font-medium leading-relaxed">{q}</p>
+          <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+            <span className="font-medium text-[hsl(var(--foreground)/0.85)]">AI:</span> {a}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VsCard({ label, text, good }: { label: string; text: string; good?: boolean }) {
+  return (
+    <div
+      className={`rounded-2xl border p-6 ${good ? 'border-[hsl(var(--accent)/0.4)] bg-[hsl(var(--surface))]' : 'border-[hsl(var(--border))] bg-[hsl(var(--surface))]'} `}
+      style={{ boxShadow: '0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3)' }}
+    >
+      <div className={`text-xs font-semibold ${good ? 'text-[hsl(var(--accent))]' : 'text-[hsl(var(--muted-foreground))]'}`}>{label}</div>
+      <p className="mt-2 text-sm leading-relaxed text-[hsl(var(--foreground)/0.9)]">{text}</p>
+    </div>
+  );
+}
+
+export default function LessonView({ lesson }: { lesson: Lesson }) {
+  const idx = lessons.findIndex((l) => l.id === lesson.id);
+  const prev = idx > 0 ? lessons[idx - 1] : undefined;
+  const next = idx < lessons.length - 1 ? lessons[idx + 1] : undefined;
+  const base = import.meta.env.BASE_URL;
+  const pill =
+    'flex min-h-[44px] items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--surface-2))] px-6 py-3 font-medium transition-transform duration-150 hover:-translate-y-0.5';
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <main className="relative">
+        <ScrollProgress />
+        <Nav current={lesson.id} lessons={lessons.map((l) => ({ id: l.id, num: l.num, nav: l.nav }))} />
+
+        {/* ── lesson header ── */}
+        <Boundary>
+          <header className="relative mx-auto max-w-6xl scroll-mt-20 px-6 pb-4 pt-28 md:pt-32">
+            <div className="relative">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-16 right-0 select-none text-[7rem] font-bold leading-none text-[hsl(var(--foreground)/0.07)] md:-top-20 md:text-[10rem]"
+              >
+                {lesson.num}
+              </span>
+              <Reveal>
+                <p className="kicker">{lesson.kicker}</p>
+                <h1 className="mt-3 text-4xl md:text-5xl">{lesson.heading}</h1>
+                <p className="mt-5 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.body}</p>
+              </Reveal>
+            </div>
+            <Plate src={asset(lesson.plate)} alt={lesson.plateAlt} fallbackId={lesson.id} caption={lesson.plateCap} />
+          </header>
+        </Boundary>
+
+        {/* ── round 1: zero-shot ── */}
+        <Boundary>
+          <section aria-labelledby={`r1-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+            <Reveal>
+              <p className="kicker">รอบที่ 1</p>
+              <h2 id={`r1-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">พรอมป์แรก (zero-shot) และผลลัพธ์</h2>
+            </Reveal>
+            <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
+              <Reveal delay={0.08}>
+                <PromptCard label="พรอมป์แรก · zero-shot" text={lesson.prompt1} />
+              </Reveal>
+              <Reveal delay={0.16}>
+                <Figure file={lesson.result1.file || undefined} cap={lesson.result1.cap} alt={lesson.result1.cap} tall={!lesson.result1.file} />
+              </Reveal>
+            </div>
+          </section>
+        </Boundary>
+
+        {/* ── dialogue ── */}
+        <Boundary>
+          <section aria-labelledby={`qa-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+            <Reveal>
+              <p className="kicker">ปรับพรอมป์ด้วยการถาม</p>
+              <h2 id={`qa-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">ถาม–ตอบ เพื่อดึงรายละเอียดที่ควรระบุ</h2>
+            </Reveal>
+            <div className="mt-8 grid gap-5 md:grid-cols-2">
+              {lesson.asks.map((ask, i) => (
+                <Reveal key={i} delay={0.08 + i * 0.07}>
+                  <QA q={ask.q} a={ask.a} n={i + 1} />
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        </Boundary>
+
+        {/* ── round 2: few-shot ── */}
+        <Boundary>
+          <section aria-labelledby={`r2-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+            <Reveal>
+              <p className="kicker">รอบที่ 2</p>
+              <h2 id={`r2-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">พรอมป์ใหม่ (few-shot) และผลลัพธ์</h2>
+            </Reveal>
+            <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
+              <Reveal delay={0.08}>
+                <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+              </Reveal>
+              <Reveal delay={0.16}>
+                {lesson.result2.file ? (
+                  <Figure file={lesson.result2.file} cap={lesson.result2.cap} alt={lesson.result2.cap} tall />
+                ) : (
+                  <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
+                )}
+              </Reveal>
+            </div>
+            {lesson.result2.file ? (
+              <Reveal delay={0.2}>
+                <p className="mt-4 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.result2.summary}</p>
+              </Reveal>
+            ) : null}
+          </section>
+        </Boundary>
+
+        {/* ── reflection ── */}
+        <Boundary>
+          <section aria-labelledby={`re-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+            <Reveal>
+              <div
+                className="overflow-hidden rounded-3xl p-8 md:p-12"
+                style={{
+                  background:
+                    'radial-gradient(120% 120% at 50% 0%, hsl(var(--accent) / 0.14), transparent 60%), hsl(var(--surface))',
+                  boxShadow: '0 2px 4px rgba(0,0,0,.35), 0 16px 48px rgba(0,0,0,.4)',
+                }}
+              >
+                <h2 id={`re-${lesson.id}`} className="text-2xl md:text-3xl">สะท้อนการเรียนรู้</h2>
+                <p className="mt-4 max-w-3xl leading-relaxed text-[hsl(var(--foreground)/0.92)]">{lesson.tip}</p>
+                <div className="mt-8 grid gap-5 md:grid-cols-2">
+                  <VsCard label="ผลลัพธ์แรก · zero-shot" text={lesson.result1.summary} />
+                  <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
+                </div>
+              </div>
+            </Reveal>
+          </section>
+        </Boundary>
+
+        {/* ── links + prev/next ── */}
+        <section className="mx-auto max-w-6xl px-6 pb-16 pt-4 md:pb-24">
+          {lesson.links.length > 0 && (
+            <Reveal>
+              <div className="flex flex-wrap items-center gap-4">
+                {lesson.links.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[44px] items-center gap-2 rounded-full bg-[hsl(var(--accent))] px-6 py-3 font-semibold text-[hsl(var(--accent-foreground))] shadow-[0_0_32px_hsl(var(--accent)/0.3)] transition-transform duration-150 hover:-translate-y-0.5"
+                  >
+                    {l.label}
+                    <span aria-hidden="true" className="text-[0.8em] opacity-70">↗</span>
+                  </a>
+                ))}
+              </div>
+            </Reveal>
+          )}
+          <Reveal delay={0.1}>
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[hsl(var(--border))] pt-8">
+              {prev ? (
+                <a href={`${base}lesson/${prev.id}`} className={pill}>
+                  ← {prev.num} · {prev.nav}
+                </a>
+              ) : (
+                <span />
+              )}
+              <a href={base} className={pill}>
+                ⚡ กลับหน้าหลัก
+              </a>
+              {next ? (
+                <a href={`${base}lesson/${next.id}`} className={pill}>
+                  {next.nav} · {next.num} →
+                </a>
+              ) : (
+                <span />
+              )}
+            </div>
+          </Reveal>
+        </section>
+
+        <footer className="mx-auto max-w-6xl px-6 pb-10 pt-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
+          <p>
+            พลังของ Prompt · การบ้าน 6 แง่ —{' '}
+            <a className="underline decoration-[hsl(var(--accent))] underline-offset-4" href={`${base}credits.md`}>
+              ดูรายละเอียดการสร้างสื่อ
+            </a>
+          </p>
+        </footer>
+      </main>
+    </MotionConfig>
+  );
+}

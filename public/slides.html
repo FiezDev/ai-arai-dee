@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สไลด์ทบทวน Week 4 — พลังของ Prompt</title>
+<style>
+:root{--ink:#1e1b3a;--muted:#6b6890;--amber:#b45309;--amberbg:#fff7e6;--line:#e5e1f5;--accent:#4f46e5}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Leelawadee UI","Noto Sans Thai","Sarabun",sans-serif;background:#eceaf6;color:var(--ink);padding:34px 16px;line-height:1.7}
+.wrap{max-width:900px;margin:0 auto}
+h1.page-title{text-align:center;font-size:1.4rem;margin-bottom:26px;color:var(--ink)}
+h1.page-title small{display:block;color:var(--muted);font-weight:400;font-size:.85rem;margin-top:4px}
+.slide{aspect-ratio:16/9;background:#fff;border:1px solid var(--line);border-radius:14px;padding:34px 40px;margin-bottom:20px;box-shadow:0 2px 10px rgba(30,27,58,.06);display:flex;flex-direction:column;page-break-inside:avoid}
+.kick{font-size:.68rem;font-weight:700;letter-spacing:.18em;color:var(--amber);text-transform:uppercase}
+h2{font-size:1.5rem;margin:4px 0 14px}
+ul{margin-left:22px;display:flex;flex-direction:column;gap:8px}
+li b{color:var(--accent)}
+.note{margin-top:auto;background:var(--amberbg);border-left:3px solid #f59e0b;border-radius:6px;padding:8px 14px;font-size:.85rem;color:#7c5a17}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{border-bottom:1px solid var(--line);padding:7px 10px;text-align:left}
+th{background:#f5f3ff;color:var(--accent)}
+.tag{display:inline-block;background:#eef2ff;color:var(--accent);border-radius:99px;font-size:.72rem;padding:2px 12px;font-weight:700;margin-right:6px}
+.pageno{position:absolute;bottom:10px;right:16px;font-size:.7rem;color:#b9b5d6}
+@media print{body{background:#fff;padding:0}.slide{border-radius:0;margin:0;box-shadow:none;page-break-after:always}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1 class="page-title">สไลด์ทบทวนก่อนสอบ · Week 4 พลังของ Prompt
+<small>GenAI 1 · สร้างจากพรอมป์รอบสอง (few-shot) · 10 สไลด์</small></h1>
+
+<div class="slide"><div class="kick">สไลด์ 1 · นิยาม</div>
+<h2>Prompt คืออะไร ทำไมถึงสำคัญ</h2>
+<ul>
+<li><b>Prompt</b> = ข้อความ/คำสั่งที่เราป้อนให้ AI เพื่อบอกว่าต้องการผลลัพธ์แบบไหน</li>
+<li>อาจเป็นคำถาม คำสั่ง หรือคำอธิบาย — สั้นหรือยาวก็ได้</li>
+<li>สำคัญเพราะเป็นตัว <b>ชี้นำทิศทางและคุณภาพผลลัพธ์</b> — prompt ชัด = คำตอบตรง</li>
+</ul>
+<div class="note">จำ: คุณภาพของคำตอบ เริ่มจากคุณภาพของคำถามเสมอ</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 2 · พื้นฐาน</div>
+<h2>AI เข้าใจภาษาของเราได้อย่างไร</h2>
+<ul>
+<li>AI ถูกฝึกด้วยข้อมูลมหาศาลบนอินเทอร์เน็ต — บทความ บทสนทนา บริบทต่าง ๆ</li>
+<li>มันตีความประโยคจาก <b>วิธีพิมพ์ การใช้คำ บริบท และความเชื่อมโยง</b>ของเนื้อหา</li>
+<li>ยิ่งเราให้บริบทชัด ความ "เดา" ของ AI ยิ่งน้อยลง</li>
+</ul>
+<div class="note">AI ไม่อ่านใจ — มันอ่าน "บริบท" ที่เราให้</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 3 · เทคนิคหลัก</div>
+<h2>Shot Prompting: Zero / One / Few-shot</h2>
+<ul>
+<li><b>Zero-shot</b> — ถามโดยไม่ให้ข้อมูล/ตัวอย่างเลย → คำตอบกว้าง บางครั้งไม่ตรง</li>
+<li><b>One-shot</b> — ให้ตัวอย่าง 1 ตัวอย่าง</li>
+<li><b>Few-shot</b> — ให้ข้อมูล รายละเอียด หรือตัวอย่างหลายชุด → คำตอบตรงเป้าและคุมได้</li>
+</ul>
+<div class="note">สูตรของการบ้านชิ้นนี้: zero-shot → ดูผล → ถามต่อ → few-shot</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 4 · โครงสร้าง</div>
+<h2>เทคนิค Role – Goal – Context (RGC)</h2>
+<ul>
+<li><b>Role</b> — กำหนดบทบาท: "คุณเป็นผู้ช่วยสอนรายวิชา GenAI…"</li>
+<li><b>Goal</b> — ระบุเป้าหมาย: "สร้างสไลด์ทบทวน 10 หน้าสำหรับนักศึกษาก่อนสอบ"</li>
+<li><b>Context</b> — ให้บริบท: ผู้อ่านคือใคร รูปแบบผลลัพธ์ ข้อจำกัด</li>
+</ul>
+<div class="note">ครบ 3 ส่วน = พรอมป์มีโครง ไม่ล่องลอย</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 5 · เทคนิคเสริม</div>
+<h2>Priming &amp; Chain of Thought</h2>
+<ul>
+<li><b>Prompt Priming</b> — เตรียมบริบทก่อนถาม เช่น ให้ AI อ่านเอกสารก่อนสั่งสรุป</li>
+<li><b>Chain of Thought</b> — ขอให้คิดทีละขั้น อธิบายเหตุผล ยกตัวอย่าง</li>
+<li>ใช้คู่กับ <b>Summarising Prompts</b>: กำหนดความยาว กลุ่มเป้าหมาย จุดเน้น</li>
+</ul>
+<div class="note">"คิดทีละขั้น" ช่วยลดความผิดพลาดของโจทย์ซับซ้อน</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 6 · เทคนิคขั้นสูง</div>
+<h2>Prompt Inception Technique</h2>
+<ul>
+<li>ให้ <b>AI ช่วยเขียน prompt</b> ตามโครงสร้างที่เราต้องการ</li>
+<li>ตัวอย่าง: "ช่วยเขียน prompt ที่ดีที่สุดสำหรับหัวข้อ สรุปข่าวการศึกษาไทยประจำสัปดาห์ ให้เหมาะกับนักศึกษา"</li>
+<li>แล้วนำ prompt ที่ได้ไปถามต่อ — AI ตอบตัวเองด้วยโครงที่ดีกว่าเดิม</li>
+</ul>
+<div class="note">เทคนิค "ฝัง" การเขียน prompt ไว้ในตัว prompt เอง</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 7 · ตัวอย่างจริง ①</div>
+<h2>การบ้านแง่ที่ 1–2: ภาพ AI และกราฟ</h2>
+<ul>
+<li><b>ภาพ (Higgsfield)</b> "นักเรียนกำลังเรียนหนังสือด้วย AI" → ภาพทั่วไป<br>
+เพิ่ม subject/แสง/องค์ประกอบ/ข้อจำกัด → ภาพตรงคอนเซปต์ใช้งานจริง</li>
+<li><b>กราฟ (Desmos)</b> "y=sin x" → เส้นเดียวไร้ความหมาย<br>
+ระบุสมการ R(t)=A·e^(−t/S) + slider + เส้นวิกฤต y=50 → เครื่องมือสอนแบบโต้ตอบ</li>
+</ul>
+<div class="note">บทเรียน: ระบุ "เป้าหมายของผลงาน" ก่อนเสมอ</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 8 · ตัวอย่างจริง ②</div>
+<h2>การบ้านแง่ที่ 3–4: Mermaid และ LaTeX</h2>
+<ul>
+<li><b>Mermaid</b> "เขียน diagram การพัฒนา prompt" → 4 กล่องธรรมดา<br>
+ระบุ subgraph 2 รอบ + classDef สี 3 ชุด → ไดอะแกรมสอนได้จริง</li>
+<li><b>LaTeX</b> "เขียนบทความ prompt engineering" → เทมเพลตอังกฤษว่างเปล่า<br>
+ระบุ XeLaTeX+ฟอนต์ไทย+โครงเรื่อง+สมการ+ตาราง → บทความวิชาการ 2 หน้า</li>
+</ul>
+<div class="note">รู้ "คำสั่งเฉพาะ" ของเครื่องมือ = คุมผลลัพธ์ได้มากขึ้น</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 9 · ตัวอย่างจริง ③</div>
+<h2>การบ้านแง่ที่ 5–6: สไลด์สรุปและเว็บไซต์</h2>
+<ul>
+<li><b>NotebookLM</b> "สรุปไฟล์นี้เป็นสไลด์" → ได้ย่อหน้าข้อความ<br>
+ระบุจำนวนหน้า+โครงเรื่อง+หน้าละ 3 bullet+คำศัพท์ตัวหนา → สไลด์ 10 หน้าพร้อมใช้</li>
+<li><b>เว็บไซต์</b> "ทำเว็บสรุปงาน" → หน้ายาวเดียว<br>
+ระบุเมนู 6 แท็บ + hash routing + ธีมเดียวทั้งชิ้น → เว็บไซต์แบบเลือกหมวดบน GitHub Pages</li>
+</ul>
+<div class="note">ทุกแง่ยืนยันแบบแผนเดียวกัน: zero-shot ได้ของทั่วไป — few-shot ได้ของของเรา</div>
+</div>
+
+<div class="slide"><div class="kick">สไลด์ 10 · สรุป</div>
+<h2>สรุป + ตารางคำศัพท์สำคัญ</h2>
+<table>
+<tr><th>คำศัพท์</th><th>ความหมาย</th></tr>
+<tr><td><b>Zero-shot</b></td><td>สั่งงานโดยไม่มีตัวอย่าง</td></tr>
+<tr><td><b>Few-shot</b></td><td>ให้ตัวอย่าง/รายละเอียดประกอบหลายชุด</td></tr>
+<tr><td><b>RGC</b></td><td>Role–Goal–Context โครงสร้างพรอมป์</td></tr>
+<tr><td><b>Priming</b></td><td>เตรียมบริบทก่อนถาม</td></tr>
+<tr><td><b>Chain of Thought</b></td><td>ให้คิดทีละขั้นตอน</td></tr>
+<tr><td><b>Prompt Inception</b></td><td>ให้ AI ช่วยเขียนพรอมป์</td></tr>
+</table>
+<div class="note">จำ 3 ข้อ: ① ระบุเป้าหมายก่อนถาม ② ให้บทบาท+บริบท+ตัวอย่าง ③ วนปรับอย่างน้อย 1 รอบเสมอ</div>
+</div>
+
+</div>
+</body>
+</html>

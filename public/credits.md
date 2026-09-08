@@ -27,3 +27,8 @@ chapter-life | nano_banana_pro | 467b534d-2928-4fbd-82c1-aea98fc47720 | 2 | Cine
 
 - งานของหน้าเว็บนี้: 6 jobs (hero video + 5 ภาพ) = 16 credits · ยอดก่อนเริ่ม 889.57 → ที่ควรเหลือ 873.57 ✔ ตรงกับ ledger
 - ระหว่างช่วงสร้างเว็บ มีรายการใช้ 32.5 credits (GPT Image 2.0 ×5, 12:32–12:44) ที่ไม่ได้มาจาก pipeline ของหน้าเว็บนี้ (สคริปต์ใช้แค่ nano_banana_pro + veo3_1_lite เท่านั้น) — โปรดตรวจสอบกับ session อื่นที่ใช้บัญชีเดียวกัน
+
+## การบ้าน 6 แง่ (เมนูด้านบน)
+- ภาพนักเรียนยามค่ำ 2 รอบ: nano_banana_pro (Higgsfield CLI) — ใช้ 4 เครดิต
+- กราฟ: จาก desmos.com จริง · ไดอะแกรม: Mermaid · เอกสาร: Tectonic/XeLaTeX
+- สไลด์ทบทวน 10 หน้า: slides.html

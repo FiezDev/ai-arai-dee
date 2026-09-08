@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือ Canva MCP — ตั้งค่าและใช้งาน</title>
+<style>
+:root{--bg:#0f0e1d;--card:#1d1b33;--line:#312e56;--ink:#e8e6f5;--muted:#9d99c0;--amber:#f5b942;--green:#4ade80}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Leelawadee UI","Noto Sans Thai","Sarabun",sans-serif;background:var(--bg);color:var(--ink);line-height:1.8}
+a{color:var(--amber)}
+.wrap{max-width:860px;margin:0 auto;padding:48px 22px 90px}
+.kicker{color:var(--amber);font-weight:700;letter-spacing:.2em;font-size:.78rem;text-transform:uppercase}
+h1{font-size:2rem;margin:.3em 0 .4em}
+h2{font-size:1.25rem;margin:2.2em 0 .5em;color:var(--amber)}
+h3{font-size:1.02rem;margin:1.4em 0 .4em}
+p{color:var(--muted);margin-bottom:.8em}
+p b,li b{color:var(--ink)}
+ol,ul{margin:0 0 1em 22px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.code{background:#0b0a16;border:1px solid var(--line);border-radius:10px;padding:16px;font-family:"Cascadia Code",Consolas,monospace;font-size:.84rem;overflow-x:auto;white-space:pre;color:#c9d1e3;margin:12px 0}
+.callout{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:10px;padding:14px 18px;margin:14px 0;color:var(--muted)}
+.callout b{color:var(--green)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;margin:10px 0}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;color:var(--muted)}
+th{background:var(--card);color:var(--ink)}
+.btn{display:inline-block;background:var(--amber);color:#1a1205;font-weight:700;padding:9px 18px;border-radius:99px;text-decoration:none;margin:6px 8px 0 0}
+.btn:hover{filter:brightness(1.07)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="kicker">คู่มือเสริม · ใช้กับแง่ที่ 1 ของการบ้าน</div>
+<h1>Canva + Canva MCP<br>คู่มือตั้งค่าและใช้งานฉบับทำได้จริง</h1>
+<p>ครูแนะนำ Canva สำหรับ "การสร้างรูปด้วย AI" — ปกติเราสร้างงานใน Canva ด้วยมือเอง
+แต่ตอนนี้ Canva มี <b>MCP Server</b> ที่ให้ AI assistant (เช่น Claude, ChatGPT, Cursor)
+สั่งสร้าง/แก้ไข/ส่งออกงานในบัญชี Canva ของเราได้โดยตรง หมายความว่าเราเขียน<b>พรอมป์ภาษาไทย</b>
+แล้วได้ไฟล์งาน Canva จริงกลับมา — เหมาะกับการบ้านแง่นี้มาก</p>
+
+<h2>1) Canva MCP คืออะไร</h2>
+<p><b>MCP (Model Context Protocol)</b> คือมาตรฐานเปิดที่เชื่อม AI assistant เข้ากับเครื่องมือภายนอก
+Canva เปิด MCP Server ที่ endpoint: <b>https://mcp.canva.com/mcp</b> (ใช้ OAuth เพื่อขอสิทธิ์เข้าบัญชี Canva ของคุณ)
+เมื่อเชื่อมต่อแล้ว AI จะทำสิ่งเหล่านี้แทนคุณได้:</p>
+<ul>
+<li><b>สร้างดีไซน์จากข้อความ</b> — "โปสเตอร์อบรม AI ธีมกลางคืน สีทอง-น้ำเงิน"</li>
+<li><b>แก้ไขงานเดิม</b> ด้วยภาษาธรรมชาติ + <b>ค้นหา</b>ดีไซน์/หน้า/โฟลเดอร์/เทมเพลต</li>
+<li><b>อัปโหลด asset</b> เข้าคลัง และจัดการโฟลเดอร์</li>
+<li><b>ส่งออกไฟล์</b> PDF / PNG / JPG / PPTX / MP4 และเปลี่ยนขนาดงาน (resize)</li>
+<li><b>คอมเมนต์</b>บนดีไซน์</li>
+</ul>
+
+<h2>2) สิ่งที่ต้องมีก่อน</h2>
+<table>
+<tr><th>องค์ประกอบ</th><th>รายละเอียด</th></tr>
+<tr><td>บัญชี Canva</td><td>แผนฟรีใช้ฟีเจอร์หลักได้ (สร้าง/แก้/ค้นหา/ส่งออก) · <b>Pro</b> ถึง resize ได้ · <b>Enterprise</b> มี Brand Kit/Autofill</td></tr>
+<tr><td>สิทธิ์ MCP</td><td>สมัคร waitlist ที่ canva.dev ก่อน (Canva อนุมัติรายกรณี อาจใช้เวลาไม่กี่วัน)</td></tr>
+<tr><td>AI ไคลเอนต์ที่รองรับ MCP</td><td>Claude Desktop / Claude Code, ChatGPT ( connectors ), Cursor, VS Code, ZCode</td></tr>
+<tr><td>Node.js</td><td>สำหรับ bridge ผ่าน <code>npx mcp-remote</code> (ถ้าไคลเอนต์ไม่รองรับ remote MCP ตรง ๆ)</td></tr>
+</table>
+
+<h2>3) ตั้งค่าทีละขั้น</h2>
+<h3>ขั้น ① ขอสิทธิ์</h3>
+<ol>
+<li>ไปที่ <a href="https://www.canva.dev/docs/mcp/" target="_blank">canva.dev/docs/mcp</a></li>
+<li>กรอก Waitlist form (ระบุ redirect URI ตามที่ไคลเอนต์กำหนด) แล้วรออีเมลอนุมัติ</li>
+</ol>
+
+<h3>ขั้น ② เพิ่ม server เข้าไคลเอนต์</h3>
+<p><b>ไคลเอนต์แบบ config <code>mcpServers</code></b> (Claude Desktop, Cursor, ZCode ฯลฯ):</p>
+<div class="code">{
+  "mcpServers": {
+    "canva": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.canva.com/mcp"]
+    }
+  }
+}</div>
+<p><b>VS Code</b> (รูปแบบ <code>servers</code> ใน mcp.json):</p>
+<div class="code">{
+  "servers": {
+    "Canva": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-remote@latest", "https://mcp.canva.com/mcp"]
+    }
+  }
+}</div>
+<p><b>ไคลเอนต์ที่รองรับ remote MCP ตรง</b> — เพียงเพิ่ม URL <code>https://mcp.canva.com/mcp</code>
+หรือกดปุ่ม "Connect in Claude" ที่หน้า <a href="https://www.canva.com/ai-connector/" target="_blank">canva.com/ai-connector</a></p>
+
+<h3>ขั้น ③ ล็อกอินอนุญาต (ครั้งเดียว)</h3>
+<ol>
+<li>รีสตาร์ทไคลเอนต์ แล้วสั่งงานอะไรก็ได้ เช่น <i>"แสดงงาน Canva ล่าสุดของฉัน"</i></li>
+<li>จะมีหน้าต่าง OAuth ให้ล็อกอิน Canva แล้วกดอนุญาต</li>
+<li>เห็นข้อความ "authorization successful" = เชื่อมสำเร็จ</li>
+</ol>
+
+<h3>ขั้น ④ ทดสอบ</h3>
+<div class="code">ผู้ใช้: ค้นหาเทมเพลตโปสเตอร์การศึกษาใน Canva ให้หน่อย
+AI: (เรียก canva search) เจอ 12 เทมเพลต ...
+ผู้ใช้: ใช้แบบแรก เปลี่ยนข้อความเป็น "อบรม Prompt Engineering เสาร์นี้ 9 โมง" แล้วส่งออก PNG ให้ฉัน</div>
+
+<h2>4) ตัวอย่างพรอมป์สำหรับการบ้านแง่ที่ 1 (แบบ Canva)</h2>
+<p>ทดลองใช้ zero-shot กับ few-shot กับ Canva MCP เหมือนที่ทำกับ Higgsfield:</p>
+<div class="code">// รอบแรก (zero-shot) — ผลลัพธ์: เทมเพลตทั่วไป ไม่ตรงธีม
+"ทำโปสเตอร์การบ้าน AI ให้หน่อย"
+
+// รอบสอง (few-shot) — หลังถาม-ตอบเรื่องธีม/สี/ขนาด/ข้อความ
+"สร้างโปสเตอร์ขนาด A4 แนวตั้ง ธีมกลางคืน พื้นน้ำเงินเข้ม #1d1b33
+ตัวอักษรทอง #f5b942 หัวเรื่อง 'พลังของ Prompt'
+พาดหัวรอง 'จาก Zero-shot สู่ Few-shot'
+ใส่พื้นที่รูปภาพ 16:9 มุมซ้ายล่าง และช่องข้อความรายชื่อ 6 แง่มุมขวา
+แรงบันดาลใจโทนสีจากเว็บ prompt-lab ของฉัน แล้วส่งออกเป็น PNG"</div>
+<div class="callout"><b>เคล็ดลับ:</b> ถ้าใช้ Canva Pro ให้เพิ่ม "ทำเวอร์ชัน 9:16 สำหรับ IG Story ด้วย" —
+การ resize คือฟีเจอร์เด่นที่ MCP เปิดให้เฉพาะแผน Pro</div>
+
+<h2>5) ข้อควรระวัง</h2>
+<ul>
+<li>สิทธิ์ตามแผนบัญชี: ฟรี = ฟีเจอร์หลัก, Pro = resize, Enterprise = Brand Kit/Autofill</li>
+<li>rate limit มีตามที่ Canva กำหนด (ดูหน้า Tools and rate limits ในเอกสาร canva.dev)</li>
+<li>AI กระทำในบัญชีจริงของคุณ — งานสำคัญให้กดยืนยัน tool call ทุกครั้ง (ไคลเอนต์ส่วนใหญ่ถามก่อนเสมอ)</li>
+<li>อย่าส่งรหัสผ่านให้ใคร — OAuth เป็นวิธีเดียวที่ Canva ใช้ ไม่มี API key แบบวางใน config</li>
+</ul>
+
+<h2>6) ลิงก์ทางการ</h2>
+<ul>
+<li>หน้าผลิตภัณฑ์: <a href="https://www.canva.com/ai-connector/" target="_blank">canva.com/ai-connector</a></li>
+<li>เอกสารนักพัฒนา: <a href="https://www.canva.dev/docs/mcp/" target="_blank">canva.dev/docs/mcp</a></li>
+<li>วิธีเชื่อมต่อต่อไคลเอนต์: <a href="https://www.canva.com/help/mcp-agent-setup/" target="_blank">canva.com/help/mcp-agent-setup</a></li>
+</ul>
+
+<a class="btn" href="index.html">← กลับหน้าหลัก Prompt Lab</a>
+</div>
+</body>
+</html>

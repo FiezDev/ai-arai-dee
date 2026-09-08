@@ -1,24 +1,8 @@
-import { Component, useEffect, useRef, useState, type ReactNode } from 'react';
-import {
-  MotionConfig,
-  motion,
-  useInView,
-  useReducedMotion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { MotionConfig, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { content } from '../content';
-
-/* ── media: ESM-imported from src/assets (Vite emits base-correct hashed URLs) ── */
-const media = import.meta.glob('../assets/*', {
-  eager: true,
-  query: '?url',
-  import: 'default',
-}) as Record<string, string>;
-const asset = (name: string): string => media[`../assets/${name}`] ?? '';
-
-const EASE = [0.23, 1, 0.32, 1] as const;
+import { lessonNav } from '../lessons';
+import { Boundary, Nav, Plate, Reveal, ScrollProgress, asset, EASE } from './ui';
 
 /* ── alt text (Thai, descriptive — a11y per AC-T10-2) ── */
 const ALT: Record<string, string> = {
@@ -28,106 +12,6 @@ const ALT: Record<string, string> = {
   'chapter-learn': 'นักเรียนกำลังอ่านหนังสือยามค่ำ มีแสงอนุภาคสีทองลอยเหนือโต๊ะเรียน',
   'chapter-life': 'ครัวไทยอบอุ่นยามเช้ามืด แสงสีทองจากลำโพงอัจฉริยะและแสงเช้าที่หน้าต่าง มีไอน้ำจากแก้วกาแฟ',
 };
-
-/* ── ErrorBoundary: one section's error cannot blank the page ── */
-class Boundary extends Component<{ children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  render() {
-    return this.state.failed ? (
-      <section data-section="error" className="px-6 py-24 text-center opacity-70">
-        ส่วนนี้แสดงผลไม่สมบูรณ์ — เลื่อนไปส่วนถัดไปได้เลย
-      </section>
-    ) : (
-      this.props.children
-    );
-  }
-}
-
-/* ── Reveal: SSR-visible (initial={false} + pre-mount 'show'); hidden only after
-     mount until in view — JS-off readers still get every word. Trigger margin 0%
-     (review: reveal earlier so content is painted by the time it's comfortably
-     in view on throttled devices). ── */
-function Reveal({
-  children,
-  delay = 0,
-  className,
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '0% 0px -8% 0px' });
-  const reduce = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  const show = !mounted || reduce || inView;
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={false}
-      animate={reduce ? { opacity: 1, y: 0 } : { opacity: show ? 1 : 0, y: show ? 0 : 24 }}
-      transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EASE, delay }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/* ── Parallax plate: translateY driven by section scroll progress.
-     Mobile: taller 16/10 frame with smaller overscan (review R13); desktop 21/9. ── */
-function Plate({ src, srcSet, alt, fallbackId }: { src: string; srcSet?: string; alt: string; fallbackId: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const plateY = useTransform(scrollYProgress, [0, 1], ['-8vh', '8vh']);
-  return (
-    <div
-      ref={ref}
-      className="relative my-8 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-[hsl(var(--surface-2))] md:aspect-[21/9]"
-      style={{ boxShadow: '0 1px 2px rgba(0,0,0,.35), 0 4px 12px rgba(0,0,0,.35), 0 12px 32px rgba(0,0,0,.35)' }}
-    >
-      <motion.div
-        data-parallax-plate
-        className="absolute inset-x-0 -top-[6vh] h-[calc(100%+12vh)] md:-top-[12vh] md:h-[calc(100%+24vh)]"
-        style={{ y: reduce ? '0px' : plateY, willChange: 'transform' }}
-      >
-        {src ? (
-          <img
-            src={src}
-            srcSet={srcSet ? `${srcSet} 960w, ${src} 2048w` : undefined}
-            sizes="(max-width: 768px) 100vw, 60vw"
-            alt={alt}
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover"
-            style={{ filter: 'saturate(0.88) contrast(1.05)' }}
-          />
-        ) : (
-          /* documented CSS fallback plate — still a parallax plate */
-          <div
-            className="h-full w-full"
-            style={{
-              background:
-                'radial-gradient(120% 90% at 30% 20%, hsl(var(--accent) / .18), transparent 55%), radial-gradient(100% 80% at 75% 80%, hsl(228 40% 20% / .9), transparent 60%), hsl(var(--surface-2))',
-            }}
-            role="img"
-            aria-label={alt || `ภาพประกอบ ${fallbackId}`}
-          />
-        )}
-      </motion.div>
-      {/* ink scrim for edge contrast */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ background: 'linear-gradient(180deg, hsl(var(--background) / .25), transparent 40%, hsl(var(--background) / .45))' }}
-      />
-    </div>
-  );
-}
 
 /* ── sections ── */
 
@@ -394,24 +278,13 @@ function CTA() {
   );
 }
 
-function ScrollProgress() {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.4 });
-  return (
-    <motion.div
-      aria-hidden="true"
-      className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left bg-[hsl(var(--accent))]"
-      style={{ scaleX }}
-    />
-  );
-}
-
 export default function Experience() {
   return (
     <MotionConfig reducedMotion="user">
       {/* grain lives on <body> (index.astro) — single overlay, not doubled here */}
       <main className="relative">
         <ScrollProgress />
+        <Nav lessons={lessonNav} />
         <Boundary>
           <Hero />
         </Boundary>
