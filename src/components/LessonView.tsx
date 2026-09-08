@@ -216,6 +216,20 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                   <Plate src={asset(lesson.plate)} alt={lesson.plateAlt} fallbackId={lesson.id} caption={lesson.plateCap} />
                 </Reveal>
               </>
+            ) : 'result2Full' in lesson && lesson.result2Full ? (
+              <>
+                <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
+                  <Reveal delay={0.08}>
+                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                  </Reveal>
+                  <Reveal delay={0.16}>
+                    <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
+                  </Reveal>
+                </div>
+                <Reveal delay={0.2}>
+                  <Figure file={lesson.result2.file || undefined} cap={lesson.result2.cap} alt={lesson.result2.cap} full />
+                </Reveal>
+              </>
             ) : (
               <>
                 <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">

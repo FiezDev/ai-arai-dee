@@ -176,7 +176,7 @@ export function PromptCard({ label, text, strong }: { label: string; text: strin
 }
 
 /* ── evidence figure (lesson pages) ── */
-export function Figure({ file, cap, alt, tall, contain }: { file?: string; cap: string; alt?: string; tall?: boolean; contain?: boolean }) {
+export function Figure({ file, cap, alt, tall, contain, full }: { file?: string; cap: string; alt?: string; tall?: boolean; contain?: boolean; full?: boolean }) {
   return (
     <figure
       className="h-full overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface))]"
@@ -188,7 +188,11 @@ export function Figure({ file, cap, alt, tall, contain }: { file?: string; cap: 
           alt={alt ?? cap}
           loading="lazy"
           decoding="async"
-          className={`w-full ${contain ? 'bg-[hsl(var(--surface-2))] object-contain p-2' : 'object-cover object-top'} ${tall ? 'max-h-[26rem]' : 'max-h-80'}`}
+          className={
+            full
+              ? 'w-full object-contain'
+              : `w-full ${contain ? 'bg-[hsl(var(--surface-2))] object-contain p-2' : 'object-cover object-top'} ${tall ? 'max-h-[26rem]' : 'max-h-80'}`
+          }
         />
       ) : (
         <div
