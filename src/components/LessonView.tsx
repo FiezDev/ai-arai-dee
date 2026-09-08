@@ -38,6 +38,7 @@ function VsCard({ label, text, good }: { label: string; text: string; good?: boo
 }
 
 export default function LessonView({ lesson }: { lesson: Lesson }) {
+  const hasIt = 'iterations' in lesson && lesson.iterations.length > 0;
   const idx = lessons.findIndex((l) => l.id === lesson.id);
   const prev = idx > 0 ? lessons[idx - 1] : undefined;
   const next = idx < lessons.length - 1 ? lessons[idx + 1] : undefined;
@@ -70,6 +71,95 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
           </header>
         </Boundary>
 
+        {/* ── multi-iteration flow (lesson 1): refs + N rounds ── */}
+        {hasIt && (
+          <>
+            <Boundary>
+              <section aria-labelledby={`refs-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+                <Reveal>
+                  <p className="kicker">เตรียมของ</p>
+                  <h2 id={`refs-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">รูปอ้างอิงทั้งสาม</h2>
+                  <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.refsIntro}</p>
+                </Reveal>
+                <div className="mt-8 grid gap-5 sm:grid-cols-3">
+                  {lesson.refs.map((r, i) => (
+                    <Reveal key={r.file} delay={0.08 + i * 0.07}>
+                      <figure
+                        className="h-full overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface))]"
+                        style={{ boxShadow: '0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3)' }}
+                      >
+                        <img
+                          src={asset(r.file)}
+                          alt={r.label}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-48 w-full bg-[hsl(var(--surface-2))] object-contain p-3"
+                        />
+                        <figcaption className="p-4 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">
+                          <span className="font-medium text-[hsl(var(--foreground)/0.9)]">{r.label}</span>
+                          <br />
+                          {r.note}
+                        </figcaption>
+                      </figure>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            </Boundary>
+
+            <Boundary>
+              <section aria-labelledby={`it-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+                <Reveal>
+                  <p className="kicker">วนปรับพรอมป์</p>
+                  <h2 id={`it-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
+                    {lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมี่ที่ใช้จริง
+                  </h2>
+                  <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.iterationsIntro}</p>
+                </Reveal>
+                <div className="mt-10 space-y-16">
+                  {lesson.iterations.map((it, i) => (
+                    <Reveal key={it.n}>
+                      <article>
+                        <div className="mb-5 flex items-center gap-4">
+                          <div
+                            aria-hidden="true"
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-lg font-bold ${
+                              i === lesson.iterations.length - 1
+                                ? 'bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))]'
+                                : 'bg-[hsl(var(--accent)/0.15)] text-[hsl(var(--accent))]'
+                            }`}
+                          >
+                            {it.n}
+                          </div>
+                          <div>
+                            <div className="text-xs font-semibold text-[hsl(var(--muted-foreground))]">รอบที่ {it.n}</div>
+                            <h3 className="text-xl">{it.delta}</h3>
+                          </div>
+                        </div>
+                        <div className={`grid items-stretch gap-6 md:grid-cols-2 ${i % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
+                          <div className="md:[direction:ltr]">
+                            <PromptCard
+                              label={`พรอมป์ · รอบที่ ${it.n}`}
+                              text={it.prompt}
+                              strong={i === lesson.iterations.length - 1}
+                            />
+                          </div>
+                          <div className="md:[direction:ltr]">
+                            <Figure file={it.img} cap={it.cap} alt={it.cap} tall contain />
+                          </div>
+                        </div>
+                      </article>
+                    </Reveal>
+                  ))}
+                </div>
+              </section>
+            </Boundary>
+          </>
+        )}
+
+        {/* ── two-round flow (lessons without iterations) ── */}
+        {!hasIt && (
+        <>
         {/* ── round 1: zero-shot ── */}
         <Boundary>
           <section aria-labelledby={`r1-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
@@ -143,6 +233,8 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
             )}
           </section>
         </Boundary>
+        </>
+        )}
 
         {/* ── reflection ── */}
         <Boundary>
@@ -159,8 +251,8 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                 <h2 id={`re-${lesson.id}`} className="text-2xl md:text-3xl">สะท้อนการเรียนรู้</h2>
                 <p className="mt-4 max-w-3xl leading-relaxed text-[hsl(var(--foreground)/0.92)]">{lesson.tip}</p>
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
-                  <VsCard label="ผลลัพธ์แรก · zero-shot" text={lesson.result1.summary} />
-                  <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
+                  <VsCard label={hasIt ? 'รอบที่ 1 · เริ่มต้น' : 'ผลลัพธ์แรก · zero-shot'} text={lesson.result1.summary} />
+                  <VsCard label={hasIt ? `รอบที่ ${lesson.iterations.length} · ฉบับสุดท้าย` : 'ผลลัพธ์ใหม่ · few-shot'} text={lesson.result2.summary} good />
                 </div>
               </div>
             </Reveal>
