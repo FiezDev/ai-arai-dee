@@ -16,6 +16,14 @@ const media = import.meta.glob('../assets/*', {
 }) as Record<string, string>;
 export const asset = (name: string): string => media[`../assets/${name}`] ?? '';
 
+/* ── raw text files from src/assets (for showing real source code) ── */
+const raws = import.meta.glob('../assets/*.tex', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>;
+export const rawText = (name: string): string => raws[`../assets/${name}`] ?? '';
+
 export const EASE = [0.23, 1, 0.32, 1] as const;
 
 /* ── ErrorBoundary: one section's error cannot blank the page ── */
@@ -206,6 +214,23 @@ export function Figure({ file, cap, alt, tall, contain, full }: { file?: string;
       )}
       {file ? <figcaption className="p-4 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">{cap}</figcaption> : null}
     </figure>
+  );
+}
+
+/* ── code card: shows a real source file (lesson pages) ── */
+export function CodeCard({ label, text }: { label: string; text: string }) {
+  return (
+    <div
+      className="overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--surface))]"
+      style={{ boxShadow: '0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.3)' }}
+    >
+      <div className="border-b border-[hsl(var(--border))] bg-[hsl(var(--surface-2))] px-5 py-3 text-xs font-semibold text-[hsl(var(--accent))]">
+        {label}
+      </div>
+      <pre className="max-h-[34rem] overflow-auto p-5 font-mono text-xs leading-relaxed text-[hsl(var(--foreground)/0.88)]">
+        <code>{text}</code>
+      </pre>
+    </div>
   );
 }
 

@@ -155,7 +155,7 @@ export const lessons = [
     ],
     plate: '',
     plateAlt: '',
-    plateCap: 'คอมไพล์ด้วย Tectonic (XeLaTeX) — PDF ฉบับเต็มและโค้ด .tex ทั้งสองเวอร์ชันอยู่ใน repo',
+    plateCap: 'คอมไพล์ด้วย Tectonic (XeLaTeX) — โค้ด .tex จริงทั้งสองฉบับแสดงและดาวน์โหลดได้ท้ายหน้านี้',
     result1: {
       file: 'latex-v1.png',
       cap: 'ผลแรก (zero-shot): เทมเพลตอังกฤษ 3 ย่อหน้า พื้น ๆ — ไม่มีตาราง ไม่มีสมการ ไม่มีภาษาไทย ใช้ส่งงานจริงไม่ได้',
@@ -167,7 +167,13 @@ export const lessons = [
       summary: 'บทความไทยเต็มรูปแบบ สมการ+ตาราง ระดับส่งได้',
     },
     tip: 'LaTeX มีกับดักภาษา — ไม่ระบุ engine และฟอนต์ ภาษาไทยก็พังทั้งไฟล์ การกำหนดโครงเรื่องล่วงหน้าในพรอมป์ยังเปลี่ยนผลลัพธ์จาก "เทมเพลต" ให้เป็น "บทความ" จริงอีกด้วย',
+    code: [
+      { label: 'v1-zeroshot.tex — ไฟล์จริงของรอบแรก (ยังไม่มีฟอนต์ไทย ไม่มีโครงเรื่อง)', file: 'v1-zeroshot.tex' },
+      { label: 'v2-fewshot.tex — ไฟล์จริงของรอบสอง ที่คอมไพล์ผ่านด้วย Tectonic (XeLaTeX) เป็น PDF 2 หน้า', file: 'v2-fewshot.tex' },
+    ],
     links: [
+      { label: 'ดาวน์โหลด .tex', href: 'https://fiezdev.github.io/ai-arai-dee/latex/v2-fewshot.tex', note: '' },
+      { label: 'เปิด PDF ฉบับเต็ม', href: 'https://fiezdev.github.io/ai-arai-dee/latex/v2-fewshot.pdf', note: '' },
       { label: 'เปิด Overleaf', href: 'https://www.overleaf.com', note: '' },
     ],
   },

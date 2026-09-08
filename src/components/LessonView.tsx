@@ -1,6 +1,6 @@
 import { MotionConfig } from 'framer-motion';
 import { lessons } from '../lessons';
-import { Boundary, Nav, Plate, PromptCard, Figure, Reveal, ScrollProgress, asset } from './ui';
+import { Boundary, Nav, Plate, PromptCard, Figure, Reveal, ScrollProgress, asset, CodeCard, rawText } from './ui';
 
 type Lesson = (typeof lessons)[number];
 
@@ -248,6 +248,25 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
           </section>
         </Boundary>
         </>
+        )}
+
+        {/* ── real source files (lessons that ship actual code) ── */}
+        {'code' in lesson && lesson.code.length > 0 && (
+          <Boundary>
+            <section aria-labelledby={`code-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+              <Reveal>
+                <p className="kicker">ไฟล์จริง</p>
+                <h2 id={`code-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">โค้ดต้นฉบับที่ใช้จริง — เปิดดูและดาวน์โหลดได้</h2>
+              </Reveal>
+              <div className="mt-8 space-y-6">
+                {lesson.code.map((c, i) => (
+                  <Reveal key={c.file} delay={0.06 + i * 0.06}>
+                    <CodeCard label={c.label} text={rawText(c.file)} />
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          </Boundary>
         )}
 
         {/* ── reflection ── */}
