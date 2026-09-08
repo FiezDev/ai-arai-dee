@@ -59,7 +59,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
             <div className="relative">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-16 right-0 select-none text-[7rem] font-bold leading-none text-[hsl(var(--foreground)/0.07)] md:-top-24 md:text-[10rem]"
+                className="pointer-events-none absolute -top-16 right-0 select-none text-[7rem] font-bold leading-none text-[hsl(var(--accent)/0.15)] md:-top-24 md:text-[10rem]"
               >
                 {lesson.num}
               </span>
