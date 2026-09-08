@@ -3,14 +3,14 @@
 //
 // Contract (design/ai-arai-dee__06-operations.md):
 //   DEFAULT run asserts the FULL site: title, lang=th, 0 console errors,
-//   8 [data-section] roots, hero video readyState>=1, parallax transform delta>0
+//   8 [data-section] roots, hero canvas ready, parallax transform delta>0
 //   sampled on ALL plates, every image naturalWidth>0 — then a SECOND Playwright
 //   context with reducedMotion:'reduce' asserting plate deltas == 0.
 //
 // Env knobs exist ONLY to narrow during interim development (final gates run the
 // knob-less default):
 //   MIN_SECTIONS   default 8      — minimum [data-section] roots
-//   VIDEO=0         skip video readyState assert
+//   HERO=0          skip hero canvas assert
 //   PARALLAX=0      skip parallax delta asserts
 //   REDUCED_MOTION=0 skip the second reduced-motion context
 //   BASE_PATH      default /ai-arai-dee/  — derived from astro.config base
@@ -18,7 +18,7 @@
 //
 // Freshness: the probe rebuilds, then verifies the served HTML is byte-identical to
 // dist/index.html — a stale squatter server cannot pass (stress R3).
-// Port: fails fast if occupied; kills stale `astro preview` first (stress R3).
+// Port: fails fast if occupied without stopping another process.
 
 import { spawn, execSync } from 'node:child_process';
 import { readFileSync, existsSync } from 'node:fs';
@@ -27,7 +27,7 @@ import { chromium } from 'playwright';
 const PORT = Number(process.env.PORT || 4321);
 const BASE_PATH = process.env.BASE_PATH || '/ai-arai-dee/';
 const MIN_SECTIONS = Number(process.env.MIN_SECTIONS || 8);
-const WANT_VIDEO = process.env.VIDEO !== '0';
+const WANT_HERO = process.env.HERO !== '0';
 const WANT_PARALLAX = process.env.PARALLAX !== '0';
 const WANT_REDUCED = process.env.REDUCED_MOTION !== '0';
 const SITE = `http://127.0.0.1:${PORT}${BASE_PATH}`;
@@ -42,11 +42,7 @@ async function freePort() {
   try {
     const out = execSync(`lsof -ti :${PORT} || true`, { stdio: ['pipe', 'pipe', 'pipe'] }).toString().trim();
     if (out) {
-      console.log(`port ${PORT} occupied (pids ${out.split('\n').join(',')}) — killing stale server`);
-      execSync(`kill -9 ${out.split('\n').join(' ')} 2>/dev/null || true`);
-      await new Promise((r) => setTimeout(r, 800));
-      const again = execSync(`lsof -ti :${PORT} || true`, { stdio: ['pipe', 'pipe', 'pipe'] }).toString().trim();
-      if (again) throw new Error(`port ${PORT} still occupied after cleanup`);
+      throw new Error(`port ${PORT} occupied; select a free port with PORT=<number>`);
     }
   } catch (e) { throw new Error(`port check failed: ${e.message}`); }
 }
@@ -88,7 +84,7 @@ async function main() {
     served === expected ? ok('freshness: served HTML == dist/index.html')
       : fail('freshness', 'served HTML differs from this build — stale server?');
 
-    const browser = await chromium.launch();
+    const browser = await chromium.launch({ channel: 'chromium' });
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
     const page = await ctx.newPage();
     const consoleErrors = [];
@@ -130,13 +126,11 @@ async function main() {
     badImgs.length === 0 && (!needImgs || imgs.length > 0) ? ok(`images ${imgs.length} loaded`)
       : fail('images', `${badImgs.length}/${imgs.length} unloaded: ${badImgs.map((i) => i.src).join(', ')}`);
 
-    // video
-    if (WANT_VIDEO) {
-      const videoState = await page.evaluate(() => {
-        const v = document.querySelector('video');
-        return v ? v.readyState : -1;
-      });
-      videoState >= 1 ? ok(`video readyState ${videoState}`) : fail('video', `readyState ${videoState}`);
+    if (WANT_HERO) {
+      const canvas = await page.locator('canvas[data-hero-wave]').count();
+      const control = await page.locator('[data-hero-pause]').count();
+      canvas === 1 && control === 1 ? ok('hero: one canvas and pause control')
+        : fail('hero', `canvases=${canvas}, controls=${control}`);
     }
 
     // parallax delta — sampled on ALL plates at two scroll positions
@@ -162,6 +156,8 @@ async function main() {
       const rpage = await rctx.newPage();
       await rpage.goto(SITE, { waitUntil: 'networkidle' });
       await rpage.waitForTimeout(1000);
+      (await rpage.locator('canvas[data-hero-wave]').count()) === 0
+        ? ok('reduced-motion: static hero poster') : fail('reduced-motion', 'hero canvas present');
       await rpage.evaluate(() => window.scrollTo(0, Math.floor(document.body.scrollHeight * 0.25)));
       await rpage.waitForTimeout(400);
       const r1 = await samplePlateTransforms(rpage);

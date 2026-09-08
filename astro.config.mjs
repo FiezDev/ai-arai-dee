@@ -9,6 +9,9 @@ export default defineConfig({
   output: 'static',
   integrations: [react()],
   vite: {
+    server: {
+      allowedHosts: ['ittipols-macbook-air'],
+    },
     plugins: [tailwindcss()],
   },
 });

@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
-import { MotionConfig, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { MotionConfig, motion, useReducedMotion } from 'framer-motion';
+import { Pause, Play } from 'lucide-react';
+import HeroBackground from './HeroBackground';
 import { content } from '../content';
 import { lessonNav } from '../lessons';
 import { Boundary, Nav, Plate, Reveal, ScrollProgress, asset, EASE } from './ui';
@@ -15,24 +17,38 @@ const ALT: Record<string, string> = {
 
 /* ── sections ── */
 
+function PageBackground() {
+  const [paused, setPaused] = useState(false);
+  const [waveReady, setWaveReady] = useState(false);
+  return (
+    <>
+      <div data-page-background="" className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+        <HeroBackground poster={asset('hero-poster.jpg')} paused={paused} onReady={setWaveReady} />
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(180deg, hsl(var(--background) / .73), hsl(var(--background) / .65) 50%, hsl(var(--background) / .8))' }}
+        />
+      </div>
+      {waveReady && (
+        <button
+          type="button"
+          onClick={() => setPaused((value) => !value)}
+          aria-label={paused ? 'เล่นภาพเคลื่อนไหวพื้นหลัง' : 'หยุดภาพเคลื่อนไหวพื้นหลังชั่วคราว'}
+          title={paused ? 'เล่นภาพเคลื่อนไหวพื้นหลัง' : 'หยุดภาพเคลื่อนไหวพื้นหลังชั่วคราว'}
+          data-hero-pause=""
+          aria-pressed={paused}
+          className="fixed bottom-5 right-5 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background) / .6)] text-sm text-[hsl(var(--foreground) / .85)] backdrop-blur-sm transition-transform duration-150 hover:scale-105"
+        >
+          {paused ? <Play size={18} aria-hidden="true" /> : <Pause size={18} aria-hidden="true" />}
+        </button>
+      )}
+    </>
+  );
+}
+
 function Hero() {
   const reduce = useReducedMotion();
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 800], [0, -220]);
-  const video = asset('hero-540.mp4') || asset('hero.mp4') || asset('hero.webm');
-  const poster = asset('hero-poster.jpg');
   const words = content.hero.headline.split(' '); // single source: content.ts
-
-  // WCAG 2.2.2 (A): autoplaying motion needs a pause; under reduced-motion render
-  // the still poster instead of autoplaying video (review finding, critical).
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(false);
-  const showVideo = !reduce;
-  const togglePause = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (v.paused) { void v.play(); setPaused(false); } else { v.pause(); setPaused(true); }
-  };
 
   // scroll hint fades out once the visitor is moving (review: stronger cue)
   const [hintGone, setHintGone] = useState(false);
@@ -47,40 +63,6 @@ function Hero() {
       data-section="hero"
       className="relative flex min-h-[100dvh] items-end overflow-hidden pb-24 md:items-center md:pb-0"
     >
-      <motion.div
-        className="absolute inset-0"
-        style={{ y: reduce ? '0px' : heroY, willChange: 'transform' }}
-      >
-        {video && showVideo ? (
-          <video
-            ref={videoRef}
-            className="h-full w-full object-cover"
-            src={video}
-            poster={poster || undefined}
-            muted
-            loop
-            playsInline
-            autoPlay
-            preload="metadata"
-            aria-hidden="true"
-          />
-        ) : (
-          <div
-            className="h-full w-full bg-cover bg-center"
-            role="img"
-            aria-label="ภาพพื้นหลังอนุภาคแสงสีทองลอยในความมืดสีน้ำเงินเข้ม"
-            style={poster ? { backgroundImage: `url(${poster})` } : {
-              background: 'radial-gradient(120% 90% at 70% 30%, hsl(var(--accent) / .16), transparent 55%), hsl(var(--background))',
-            }}
-          />
-        )}
-        {/* strengthened mid scrim: text zone stays ≥4.5:1 over bright video frames */}
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(180deg, hsl(var(--background) / .75), hsl(var(--background) / .65) 50%, hsl(var(--background) / .92))' }}
-        />
-      </motion.div>
-
       <div className="relative mx-auto w-full max-w-6xl px-6">
         <h1 className="flex flex-wrap items-baseline gap-x-5 text-6xl font-bold tracking-tight md:text-8xl">
           {words.map((w, i) => (
@@ -116,16 +98,6 @@ function Hero() {
         </Reveal>
       </div>
 
-      {video && showVideo && (
-        <button
-          type="button"
-          onClick={togglePause}
-          aria-label={paused ? 'เล่นวิดีโอพื้นหลัง' : 'หยุดวิดีโอพื้นหลังชั่วคราว'}
-          className="absolute bottom-5 right-5 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background) / .6)] text-sm text-[hsl(var(--foreground) / .85)] backdrop-blur-sm transition-transform duration-150 hover:scale-105"
-        >
-          {paused ? '▶' : '❚❚'}
-        </button>
-      )}
     </section>
   );
 }
@@ -282,7 +254,8 @@ export default function Experience() {
   return (
     <MotionConfig reducedMotion="user">
       {/* grain lives on <body> (index.astro) — single overlay, not doubled here */}
-      <main className="relative">
+      <PageBackground />
+      <main className="relative z-10">
         <ScrollProgress />
         <Nav lessons={lessonNav} />
         <Boundary>
