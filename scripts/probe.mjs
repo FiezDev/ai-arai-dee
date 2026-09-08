@@ -21,7 +21,7 @@
 // Port: fails fast if occupied without stopping another process.
 
 import { spawn, execSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { chromium } from 'playwright';
 
 const PORT = Number(process.env.PORT || 4321);
@@ -59,6 +59,10 @@ async function main() {
   const distIndex = new URL('../dist/index.html', import.meta.url).pathname;
   if (!existsSync(distIndex)) throw new Error('dist/index.html missing after build');
   const expected = readFileSync(distIndex, 'utf8');
+  const legacyVideos = readdirSync(new URL('../dist/_astro/', import.meta.url))
+    .filter((name) => /^hero.*\.(mp4|webm)$/.test(name));
+  legacyVideos.length === 0 ? ok('build: no legacy hero videos')
+    : fail('build', `legacy hero videos emitted: ${legacyVideos.join(', ')}`);
 
   await freePort();
 
@@ -157,7 +161,8 @@ async function main() {
       await rpage.goto(SITE, { waitUntil: 'networkidle' });
       await rpage.waitForTimeout(1000);
       (await rpage.locator('canvas[data-hero-wave]').count()) === 0
-        ? ok('reduced-motion: static hero poster') : fail('reduced-motion', 'hero canvas present');
+        && (await rpage.locator('[data-hero-background]').evaluate((element) => getComputedStyle(element).backgroundImage)) === 'none'
+        ? ok('reduced-motion: plain background, no poster') : fail('reduced-motion', 'hero canvas or poster present');
       await rpage.evaluate(() => window.scrollTo(0, Math.floor(document.body.scrollHeight * 0.25)));
       await rpage.waitForTimeout(400);
       const r1 = await samplePlateTransforms(rpage);

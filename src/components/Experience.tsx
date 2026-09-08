@@ -23,7 +23,7 @@ function PageBackground() {
   return (
     <>
       <div data-page-background="" className="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
-        <HeroBackground poster={asset('hero-poster.jpg')} paused={paused} onReady={setWaveReady} />
+        <HeroBackground paused={paused} onReady={setWaveReady} />
         <div
           className="absolute inset-0"
           style={{ background: 'linear-gradient(180deg, hsl(var(--background) / .73), hsl(var(--background) / .65) 50%, hsl(var(--background) / .8))' }}

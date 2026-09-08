@@ -10,7 +10,7 @@ import {
 } from 'framer-motion';
 
 /* ── media: ESM-imported from src/assets (Vite emits base-correct hashed URLs) ── */
-const media = import.meta.glob('../assets/*', {
+const media = import.meta.glob(['../assets/*', '!../assets/hero*.mp4', '!../assets/hero*.webm'], {
   eager: true,
   query: '?url',
   import: 'default',

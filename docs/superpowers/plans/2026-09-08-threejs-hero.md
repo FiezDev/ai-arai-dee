@@ -4,7 +4,9 @@
 
 **Goal:** Replace the homepage hero video with an interactive gold particle wave in real 3D, retaining the current text and layout.
 
-**Architecture:** A React HeroBackground component owns client-only scene startup and a poster fallback. A dynamically imported Three.js module owns GPU particles, camera parallax, resizing, visibility, pause, and resource cleanup. Hero text remains server-rendered HTML.
+**Architecture:** A React HeroBackground component owns client-only scene startup and a plain-color fallback. A dynamically imported Three.js module owns GPU particles, camera parallax, resizing, visibility, pause, and resource cleanup. Hero text remains server-rendered HTML.
+
+**Renderer-only revision (2026-09-09):** The old video poster no longer appears on the homepage, including before hydration, during delayed Three.js imports, under reduced motion, or after renderer failure. Those states use the renderer's plain clear color. The unused hero videos are excluded from Vite's media glob and production output; source references remain available for research. The poster is retained only as an existing web-lesson illustration. Earlier poster-fallback entries below describe the superseded implementation. `scripts/verify-hero-startup.mjs` checks startup and network requests with JavaScript disabled and delayed scene imports on desktop/mobile.
 
 **Tech Stack:** Existing Astro, React, Framer Motion, pnpm, Playwright; add three, @types/three, and lucide-react for the pause/play control.
 

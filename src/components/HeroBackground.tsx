@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HeroWave } from './hero-wave';
 
-type Props = { poster: string; paused: boolean; onReady: (ready: boolean) => void };
+type Props = { paused: boolean; onReady: (ready: boolean) => void };
 
-export default function HeroBackground({ poster, paused, onReady }: Props) {
+export default function HeroBackground({ paused, onReady }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const wave = useRef<HeroWave | null>(null);
   const pausedRef = useRef(paused);
@@ -48,9 +48,9 @@ export default function HeroBackground({ poster, paused, onReady }: Props) {
     <div
       ref={host}
       data-hero-background=""
-      className="pointer-events-none absolute inset-0 bg-cover bg-center"
+      className="pointer-events-none absolute inset-0"
       aria-hidden="true"
-      style={{ backgroundColor: '#080b14', backgroundImage: poster ? `url(${poster})` : undefined }}
+      style={{ backgroundColor: '#010206' }}
     />
   );
 }

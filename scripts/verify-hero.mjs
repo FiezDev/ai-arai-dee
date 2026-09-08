@@ -226,7 +226,7 @@ try {
     assert.equal(await canvas.count(), 1, `${name}: motion preference restores one canvas`);
     await canvas.evaluate((element) => element.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());
     await canvas.waitFor({ state: 'detached', timeout: 5000 });
-    assert.equal(await canvas.count(), 0, `${name}: context loss restores poster`);
+    assert.equal(await canvas.count(), 0, `${name}: context loss leaves plain background`);
     assert.equal(await page.locator('[data-hero-pause]').count(), 0);
     const fps = rendered / (frameEnd.time - frameStart.time) * 1000;
     console.log(`PASS ${name}: ${fps.toFixed(1)} fps, gold pixels ${pixels.gold}/${pixels.total}; scroll/wheel spin, boundary input, delta modes, zoom guard, fixed background, pointer, budgets, pause, resize, live preferences, context loss`);
@@ -274,7 +274,7 @@ try {
   assert.equal(await spage.locator('[data-hero-pause]').count(), 0, 'slow-renderer fallback removes inactive controls');
   assert.ok(await spage.locator('[data-page-background]').isVisible(), 'slow-renderer fallback retains fixed background');
   await slow.close();
-  console.log('PASS limited-device budgets and simulated slow-frame quality reduction / poster fallback');
+  console.log('PASS limited-device budgets and simulated slow-frame quality reduction / plain fallback');
 
   const reduced = await browser.newContext({ reducedMotion: 'reduce' });
   const rpage = await reduced.newPage();
@@ -283,14 +283,8 @@ try {
   await rpage.goto(site, { waitUntil: 'networkidle' });
   assert.equal(await rpage.locator('canvas[data-hero-wave]').count(), 0);
   assert.ok(!scripts.some((url) => /hero-wave[.-]|\/three[/.]/.test(url)), 'reduced motion avoids Three.js download');
-  const poster = await rpage.locator('[data-hero-background]').evaluate(async (element) => {
-    const url = getComputedStyle(element).backgroundImage.slice(5, -2);
-    const image = new Image();
-    image.src = url;
-    await image.decode();
-    return image.naturalWidth;
-  });
-  assert.ok(poster > 0, 'fallback poster loads');
+  assert.equal(await rpage.locator('[data-hero-background]').evaluate((element) =>
+    getComputedStyle(element).backgroundImage), 'none', 'reduced motion never shows the old poster');
   await rpage.screenshot({ path: new URL('reduced-motion.png', output).pathname });
   await reduced.close();
 
@@ -348,7 +342,7 @@ try {
   assert.ok(basicPixels.gold > 300, 'no float targets: visible rendering without bloom');
   await noFloat.close();
   assert.deepEqual(errors, [], 'no browser errors');
-  console.log('PASS reduced-motion startup, no Three.js request, cancelled import, poster asset, unavailable WebGL, lesson navigation, clean browser console');
+  console.log('PASS reduced-motion startup, no Three.js request, cancelled import, no poster, unavailable WebGL, lesson navigation, clean browser console');
 } finally {
   await browser.close();
 }

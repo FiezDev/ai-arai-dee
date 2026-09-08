@@ -132,7 +132,7 @@ export function createHeroWave(host: HTMLDivElement, paused: boolean, onFailure:
       if (lastRender && now - lastRender < 1000 / targetFPS - 1) return;
       const gap = previous ? now - previous : 0;
       slowFrames = gap > (qualityScale === 1 ? 70 : 95) ? slowFrames + 1 : Math.max(0, slowFrames - 1);
-      // Lower GPU load after sustained slow frames; keep the poster as a last resort.
+      // Lower GPU load after sustained slow frames; stop rendering as a last resort.
       if (slowFrames >= 12) {
         if (qualityScale < 1) { fail(); return; }
         qualityScale = .7;
