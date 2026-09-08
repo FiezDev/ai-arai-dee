@@ -1,0 +1,158 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=2.5cm}
+
+\title{Cat Behavior in a Multi-Cat Home:\\A New Owner's Guide to Earning Trust and Building Harmony}
+\author{Ittipol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Sharing a home with more than one cat multiplies the joy---and the complexity. Cats are
+descended from solitary hunters, so sharing territory, food, and a favorite human does
+not come naturally to them. This article explains feline behavior in the multi-cat
+household: how cats read each other's body language, why apparently aggressive rituals
+are often negotiation, and how resources such as litter trays, bowls, and resting spots
+shape the peace. A step-by-step introduction program shows how to bring a new cat into
+a home with resident cats, and a simple model illustrates why household harmony grows
+slowly at first and then stabilizes. With patience and good resource management, most
+cats learn to coexist---and many become genuine companions.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Many new cat owners adopt a second cat expecting instant friendship, only to be met
+with hissing, staring contests, and midnight ``cat fights.'' The disappointment comes
+from a simple misunderstanding: cats form social groups reluctantly, and only on their
+own terms. In the wild, related females sometimes form colonies, but unrelated cats
+must negotiate every shared resource---space, food, litter, and human attention.
+
+This guide is organized in three parts: how cats communicate with each other
+(Section~\ref{sec:body}), how multi-cat dynamics actually work
+(Section~\ref{sec:dynamics}), and a practical program for introducing a new cat and
+building a peaceful household (Section~\ref{sec:program}).
+
+\section{Reading Cat Body Language}
+\label{sec:body}
+Before reading a multi-cat household, an owner must read a single cat. Table~\ref{tab:body}
+summarizes the signals that matter most when cats interact with people and with each other.
+
+\begin{table}[h]
+\centering
+\caption{Common cat body-language signals and their meaning.}
+\label{tab:body}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Signal} & \textbf{Appearance} & \textbf{Meaning} \\
+\midrule
+Tail held high & Tail vertical, slight curve at tip & Confident, friendly \\
+Slow blink & Eyes half-closed, relaxed & Trust, non-threat \\
+Purring & Rhythmic low vibration & Content (or self-soothing) \\
+Ears flattened & Ears turned sideways or back & Fear or irritation \\
+Dilated pupils & Large black eyes in bright light & Fear, excitement, or play \\
+Hiding & Cat retreats under furniture & Overwhelmed; needs space \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Between \emph{cats}, two additional signals matter most. A cat that walks past another
+with a high tail is offering peaceful contact---a good sign that the group is forming.
+A long, unbroken stare with a stiff, lowered body is a claim on territory, and the
+other cat's response (returning the stare, looking away, or retreating) tells the owner
+how tense the relationship currently is.
+
+\section{Multi-Cat Dynamics}
+\label{sec:dynamics}
+\subsection{Play or Fight?}
+Wrestling, chasing, and gentle biting are normal play, especially between young cats.
+True fighting is quieter and faster: flattened ears, loud vocalizing, claws out, and
+one cat repeatedly cornering the other. A useful rule: in play, cats \emph{take turns}
+chasing and pinning each other; in conflict, one cat is always the winner and the other
+always hides afterward.
+
+\subsection{The Resource Rule}
+Most multi-cat tension is resource tension. The guiding principle is
+\emph{$N + 1$}: a home with $N$ cats should provide $N + 1$ litter trays, $N + 1$
+feeding stations, and multiple water sources and resting places at different heights.
+When a single resource must be shared, a confident cat can quietly block a shy cat from
+eating or using the tray---a common hidden cause of house-soiling and weight loss.
+
+\subsection{Group Scent}
+Cats that accept each other groom and rub against one another, blending into a single
+``group scent.'' Allogrooming (mutual licking), sleeping in contact, and tail-up
+greetings are the clearest indicators that the cats now consider themselves one social
+group rather than reluctant roommates.
+
+\section{Introducing a New Cat: A Step-by-Step Program}
+\label{sec:program}
+Never put a new cat straight into the resident cat's territory. Table~\ref{tab:program}
+lays out a staged introduction that fits most households.
+
+\begin{table}[h]
+\centering
+\caption{A staged protocol for introducing a new cat to resident cats.}
+\label{tab:program}
+\begin{tabular}{@{}clp{8.5cm}@{}}
+\toprule
+\textbf{Days} & \textbf{Stage} & \textbf{What to do} \\
+\midrule
+1--3 & Decompress & Keep the new cat in one quiet room with its own litter tray, food, and hiding place. Let the resident cat keep the rest of the house. \\
+3--7 & Scent swap & Exchange bedding and toys between rooms; feed the cats on either side of the closed door so they associate each other's smell with food. \\
+1--2 weeks & Visual contact & Open the door a crack or use a baby gate / carrier; reward calm behavior with treats on both sides. \\
+2--4 weeks & Supervised visits & Short shared sessions in a neutral room, with wand toys to redirect excitement. Separate at the first fixed stare. \\
+1--3 months & Integration & Free access under observation; keep the $N+1$ resource rule and separate feeding if one cat bullies the other. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+During every stage, the new cat is also learning to trust \emph{you}: sit in its room,
+offer treats, use slow blinks, and let it set the pace of contact exactly as with a
+single-cat adoption.
+
+\subsection{A Simple Model of Household Harmony}
+Harmony in a multi-cat home grows quickly at first---novelty fades and early rituals
+are established---then levels off as the relationship finds its stable form. A toy
+model captures this with a saturating curve:
+\begin{equation}
+H(t) = H_{\max}\left(1 - e^{-kt}\right),
+\label{eq:harmony}
+\end{equation}
+where $H(t)$ is the level of household harmony after $t$ days, $H_{\max}$ is the best
+relationship these particular cats can reach (some pairs never become friends, only
+peaceful cohabitants), and $k$ grows with the owner's consistency: respecting the staged
+introduction, applying the $N+1$ resource rule, and interrupting conflict early. An
+owner cannot force $H_{\max}$ higher than the cats' personalities allow; they can only
+raise $k$ so the household reaches its natural ceiling quickly and calmly.
+
+\section{Conclusion}
+A multi-cat home is a small society under negotiation. Once an owner can read feline
+body language, distinguish play from conflict, and manage resources by the $N+1$ rule,
+most apparent ``behavior problems'' resolve into understandable communication.
+Introducing a new cat in stages---decompression, scent swap, visual contact, supervised
+visits, integration---protects both the newcomer and the residents, and patience during
+these weeks is repaid with a calmer household for years. Not every pair of cats becomes
+cuddling friends, but nearly every pair can reach peaceful, predictable coexistence.
+
+\begin{thebibliography}{9}
+\bibitem{bradshaw} J. Bradshaw, \emph{Cat Sense: How the New Feline Science Can Make
+You a Better Friend to Your Pet}. Basic Books, 2013.
+\bibitem{johnson} P. Johnson-Bennett, \emph{Cat vs. Cat: Keeping Peace When You Have
+More Than One Cat}. Penguin Books, 2004.
+\bibitem{icatcare} International Cat Care, ``Introducing cats to each other.''
+\url{https://icatcare.org}
+\bibitem{aspca} ASPCA, ``Cat behavior.'' \url{https://www.aspca.org}
+\end{thebibliography}
+
+\end{document}
