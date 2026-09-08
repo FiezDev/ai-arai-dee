@@ -119,7 +119,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                   <h2 id={`it-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
                     {'itHeading' in lesson
                       ? lesson.itHeading
-                      : `${lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมี่ที่ใช้จริง`}
+                      : `${lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมที่ใช้จริง`}
                   </h2>
                   <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.iterationsIntro}</p>
                 </Reveal>
