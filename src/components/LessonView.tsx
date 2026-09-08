@@ -172,7 +172,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                 <PromptCard label="พรอมป์แรก · zero-shot" text={lesson.prompt1} />
               </Reveal>
               <Reveal delay={0.16}>
-                <Figure file={lesson.result1.file || undefined} cap={lesson.result1.cap} alt={lesson.result1.cap} tall={!lesson.result1.file} />
+                <Figure file={lesson.result1.file || undefined} cap={lesson.result1.cap} alt={lesson.result1.cap} tall={!lesson.result1.file} contain={!!lesson.result1.file} />
               </Reveal>
             </div>
           </section>
@@ -223,7 +223,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                     <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
                   </Reveal>
                   <Reveal delay={0.16}>
-                    <Figure file={lesson.result2.file || undefined} cap={lesson.result2.cap} alt={lesson.result2.cap} tall />
+                    <Figure file={lesson.result2.file || undefined} cap={lesson.result2.cap} alt={lesson.result2.cap} tall contain={!!lesson.result2.file} />
                   </Reveal>
                 </div>
                 <Reveal delay={0.2}>
