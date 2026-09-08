@@ -74,6 +74,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
         {/* ── multi-iteration flow (lesson 1): refs + N rounds ── */}
         {hasIt && (
           <>
+            {'refs' in lesson && (
             <Boundary>
               <section aria-labelledby={`refs-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
@@ -106,6 +107,7 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                 </div>
               </section>
             </Boundary>
+            )}
 
             <Boundary>
               <section aria-labelledby={`it-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
