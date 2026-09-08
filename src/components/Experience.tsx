@@ -174,7 +174,7 @@ function Chapter({ ch, flip }: { ch: (typeof content.chapters)[number]; flip: bo
         <div className="relative md:col-span-2 md:[direction:ltr]">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -top-14 right-0 select-none text-[6.5rem] font-bold leading-none text-[hsl(var(--accent) / 0.15)] md:-top-16 md:text-[9rem]"
+            className="pointer-events-none absolute -top-14 right-0 select-none text-[6.5rem] font-bold leading-none text-transparent [-webkit-text-stroke:2px_hsl(var(--accent)/0.5)] md:-top-16 md:text-[9rem]"
           >
             {ch.num}
           </span>
