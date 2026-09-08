@@ -260,11 +260,19 @@ export const lessons = [
       },
       {
         n: 5,
-        delta: '12:34–13:21 — ขอดูของจริงก่อน แล้วอนุมัติขึ้น production',
-        prompt: 'spin a local for me to check\n\n(ผมเปิด preview ตรวจเองจนพอใจ)\n\nnow host in on github',
+        delta: '13:16 — AI แจ้งว่า "เสร็จแล้ว เว็บขึ้น live แล้ว" → ผมขอเปิดดูเองก่อน',
+        prompt: 'AI: "เสร็จแล้วครับ — the site is live at https://fiezdev.github.io/ai-arai-dee/ ... All 13 tasks in the pack are done with every gate green."\n\nผม: spin a local for me to check\n\nAI: "Local server is up — open http://127.0.0.1:4321/ai-arai-dee/ ... Things worth checking as you scroll: the hero video with the pause button, the gold parallax plates, the scroll progress bar ... If you want to test the reduced-motion path, toggle it in System Settings and reload."\n\nผม: (เปิดดูเอง คลิกเอง ทั้งเดสก์ท็อปและมือถือ)\n\nผม: now host in on github\n\nAI: "Good news — it\'s already hosted on GitHub Pages from the automated run. Let me verify the live deployment is current with the latest code."',
         img: 'araid-mobile_hero.png',
-        cap: 'ขั้นสุดท้ายครับ — ตอนเว็บเสร็จ ผมไม่ได้ให้ขึ้น production เลย แต่พิมพ์ขอดูเว็บแบบ local ก่อน (spin a local for me to check) แล้วเปิดเอง คลิกเอง ทั้งเดสก์ท็อปและมือถือ จนแน่ใจแล้วค่อยพิมพ์ประโยคปิด "now host in on github" (ตั้งใจพิมพ์ in ซ้ำสองรอบด้วย) — push ครั้งเดียว Actions build และตรวจทุก URL เอง เว็บก็อยู่ที่ fiezdev.github.io/ai-arai-dee จนถึงวันนี้ ก่อนปิด session ระบบยังเขียน retro สรุปบทเรียนเก็บไว้ให้ด้วย',
+        cap: 'จุดที่ต้องสารภาพครับ — ผมกำหนดให้มันอัตโนมัติ "ถึงไหนถึงนั่น" มันเลย deploy จริงจบไปแล้วตั้งแต่ 13:16 ตามใบงาน T13 ก่อนที่ผมจะได้ดูเลย พอมันแจ้งเสร็จ ผมเลยขอ spin เครื่อง local ขึ้นมาดูเอง (มันบอกด้วยว่า local นี้รัน production build เดียวกับที่ deploy ไปแล้ว พร้อมเช็กลิสต์น่าดู) พอตรวจจนพอใจแล้วพิมพ์ "now host in on github" มันตอบกลับมาว่าขึ้นไว้แล้ว แล้วเช็คให้ว่าตัว live ตรงกับโค้ดล่าสุดจริง — บทเรียนของผมคือประโยค "automate task do it too the end" มีน้ำหนักกว่าที่คิด มัน deploy ให้เสร็จจริง ๆ',
       },
+    ],
+    asksIntro: 'ปกติช่วงวางแผน AI จะถาม-ตอบกับเราเป็นข้อ ๆ แต่บรรทัด "this is automate task do it too the end" ทำให้มันตัดสินใจเองหมดแล้วจดไว้ใน spec (ส่วน Auto-decisions) — เหลือเฉพาะ 5 จังหวะที่ผมขัดหรือตอบกลับเองดังนี้ (คัดจากบันทึก session จริงทุกคำ)',
+    asks: [
+      { q: 'AI (11:41): จบการสำรวจแล้ว กำลังจะเขียน spec โดยเลือกทาง "generate ภาพฟรีผ่าน browser automation หน้าเว็บ Higgsfield" (ภาพได้ แต่วิดีโอไม่มีทางฟรี)', a: 'ผม: "no for higgfield use higgfieldcli not from web" — AI รับทันที: "Got it — using the official Higgsfield CLI instead of the web-automation path. Stopping the web spike now." แล้วเปลี่ยนเป็น REV 1 ของ spec' },
+      { q: 'AI (11:50): กำลังเขียนเอกสารออกแบบ — ใน scope ยังเป็นแค่เว็บ static ยังไม่มีเรื่อง hosting', a: 'ผม: "host in github" — AI: "Adding GitHub hosting to scope (Rev 2) — updating spec, tasks with a deploy task, and the design docs." แล้วเพิ่มใบงาน T13 (deploy + ตรวจ live URL) เข้าไปในตัว' },
+      { q: 'AI (11:51): อัปเดต Rev 2 เสร็จ กำลังเรียงลำดับใบงานใหม่', a: 'ผม: "continue" — AI: "Continuing — finishing the design phase: shared design docs, vendoring tools, rendering + checking."' },
+      { q: 'AI (13:16): "เสร็จแล้วครับ — the site is live at https://fiezdev.github.io/ai-arai-dee/ ... All 13 tasks done with every gate green" (ตามที่สั่ง automate มัน deploy ไปแล้วด้วย)', a: 'ผม: "spin a local for me to check" — AI เปิด preview ให้ที่ 127.0.0.1:4321 พร้อมเช็กลิสต์: ปุ่มหยุดวิดีโอ, parallax, แถบ progress, โหมด reduced-motion' },
+      { q: 'AI (13:17): "The server keeps running in the background — tell me when you\'re done and I\'ll stop it"', a: 'ผมตรวจเองสักพัก แล้วพิมพ์ "now host in on github" — AI: "Good news — it\'s already hosted on GitHub Pages from the automated run. Let me verify the live deployment is current with the latest code."' },
     ],
     result1: {
       file: '',
@@ -276,7 +284,7 @@ export const lessons = [
       cap: '',
       summary: 'ปลายทาง: เว็บ parallax ครบทุกมาตรฐาน accessibility ขึ้น production จริง ใช้เครดิต 16 หน่วย และวันนี้ยังต่อยอดเป็นที่รวมการบ้าน 6 แง่ — ทั้งหมดนี้เริ่มจากพรอมป์รวมกันแล้วไม่ถึงสามบรรทัด',
     },
-    tip: 'สิ่งที่ session จริงสอนผมคือพรอมป์ระดับโปรเจกต์ไม่ได้ยาวเป็นพารากราฟสวย ๆ แต่มันอยู่ตรง "จังหวะ" ครับ — ข้อความเปิดหนึ่งอันที่ใส่ครบทั้งหัวข้อ เครื่องมือ ด่านตรวจ และประโยคเปิดอำนาจ (this is automate task do it too the end) ตั้งระดับอิสระของระบบตั้งแต่วินาทีแรก ตามด้วยคำคุมทิศสั้น ๆ ตอนมันเบี้ยว (ใช้ CLI ไม่ใช่เว็บ / host in github) และปิดท้ายด้วยการตรวจของจริงเองก่อนอนุมัติ (spin a local → ดูเอง → now host in on github) แม้แต่คำพิมพ์ผิดอย่าง higgfield กับ df-ui-ravemp ระบบก็ยังเดาออก — แปลว่าของสำคัญไม่ใช่ความสะกดถูก แต่คือครบองค์ประกอบและมาถูกจังหวะ',
+    tip: 'สิ่งที่ session จริงสอนผมคือพรอมป์ระดับโปรเจกต์ไม่ได้ยาวเป็นพารากราฟสวย ๆ แต่มันอยู่ตรง "จังหวะ" ครับ — ข้อความเปิดหนึ่งอันที่ใส่ครบทั้งหัวข้อ เครื่องมือ ด่านตรวจ และประโยคเปิดอำนาจ (this is automate task do it too the end) ตั้งระดับอิสระของระบบตั้งแต่วินาทีแรก ตามด้วยคำคุมทิศสั้น ๆ ตอนมันเบี้ยว (ใช้ CLI ไม่ใช่เว็บ / host in github) และปิดท้ายด้วยการเปิดดูของจริงเองก่อนยืนยัน (spin a local → เปิดเอง → now host in on github — ซึ่งมันตอบกลับมาว่า deploy ให้เรียบร้อยแล้ว นั่นแหละความหมายจริงของ automate to the end) แม้แต่คำพิมพ์ผิดอย่าง higgfield กับ df-ui-ravemp ระบบก็ยังเดาออก — แปลว่าของสำคัญไม่ใช่ความสะกดถูก แต่คือครบองค์ประกอบและมาถูกจังหวะ',
     future: 'อยากลองแบบเดียวกันนี้กับงานที่ใหญ่กว่าดูครับ — สั่งแค่ประโยคเปิด แล้วซ้อมมือคุมทิศด้วยคำสั้น ๆ ให้คมขึ้นเรื่อย ๆ แล้ววัดผลว่าคอร์เรกชันกลางทางสักกี่คำหนึ่ง session ถึงคุ้ม นอกจากนี้อยากเพิ่มหน้าสรุปรวมทุกแง่ในตารางเดียว กับปุ่มสลับโหมดสว่าง/มืดสำหรับคนอ่านหน้าจอนาน ๆ ครับ',
     links: [
       { label: 'เว็บที่สร้างจาก session นี้', href: 'https://fiezdev.github.io/ai-arai-dee/', note: '' },

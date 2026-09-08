@@ -159,6 +159,28 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
           </>
         )}
 
+        {/* ── real session dialogue (iterations lessons that carry Q&A) ── */}
+        {hasIt && lesson.asks.length > 0 && (
+          <Boundary>
+            <section aria-labelledby={`qa-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
+              <Reveal>
+                <p className="kicker">บทสนทนาจริงใน session</p>
+                <h2 id={`qa-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">AI ถาม/รายงานอะไร — ผมตอบอะไร</h2>
+                {'asksIntro' in lesson && (
+                  <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.asksIntro}</p>
+                )}
+              </Reveal>
+              <div className="mt-8 grid gap-5 md:grid-cols-2">
+                {lesson.asks.map((ask, i) => (
+                  <Reveal key={i} delay={0.08 + i * 0.06}>
+                    <QA q={ask.q} a={ask.a} n={i + 1} />
+                  </Reveal>
+                ))}
+              </div>
+            </section>
+          </Boundary>
+        )}
+
         {/* ── two-round flow (lessons without iterations) ── */}
         {!hasIt && (
         <>
