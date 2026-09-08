@@ -39,6 +39,7 @@ function VsCard({ label, text, good }: { label: string; text: string; good?: boo
 
 export default function LessonView({ lesson }: { lesson: Lesson }) {
   const hasIt = 'iterations' in lesson && lesson.iterations.length > 0;
+  const stepWord = 'stepWord' in lesson ? lesson.stepWord : 'รอบที่';
   const idx = lessons.findIndex((l) => l.id === lesson.id);
   const prev = idx > 0 ? lessons[idx - 1] : undefined;
   const next = idx < lessons.length - 1 ? lessons[idx + 1] : undefined;
@@ -78,8 +79,10 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
             <Boundary>
               <section aria-labelledby={`refs-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
-                  <p className="kicker">เตรียมของ</p>
-                  <h2 id={`refs-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">รูปอ้างอิงทั้งสาม</h2>
+                  <p className="kicker">{'refsKicker' in lesson ? lesson.refsKicker : 'เตรียมของ'}</p>
+                  <h2 id={`refs-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
+                    {'refsHeading' in lesson ? lesson.refsHeading : 'รูปอ้างอิงทั้งสาม'}
+                  </h2>
                   <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.refsIntro}</p>
                 </Reveal>
                 <div className="mt-8 grid gap-5 sm:grid-cols-3">
@@ -112,9 +115,11 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
             <Boundary>
               <section aria-labelledby={`it-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
-                  <p className="kicker">วนปรับพรอมป์</p>
+                  <p className="kicker">{'itKicker' in lesson ? lesson.itKicker : 'วนปรับพรอมป์'}</p>
                   <h2 id={`it-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
-                    {lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมี่ที่ใช้จริง
+                    {'itHeading' in lesson
+                      ? lesson.itHeading
+                      : `${lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมี่ที่ใช้จริง`}
                   </h2>
                   <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.iterationsIntro}</p>
                 </Reveal>
@@ -134,14 +139,14 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                             {it.n}
                           </div>
                           <div>
-                            <div className="text-xs font-semibold text-[hsl(var(--muted-foreground))]">รอบที่ {it.n}</div>
+                            <div className="text-xs font-semibold text-[hsl(var(--muted-foreground))]">{stepWord} {it.n}</div>
                             <h3 className="text-xl">{it.delta}</h3>
                           </div>
                         </div>
                         <div className={`grid items-stretch gap-6 md:grid-cols-2 ${i % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
                           <div className="md:[direction:ltr]">
                             <PromptCard
-                              label={`พรอมป์ · รอบที่ ${it.n}`}
+                              label={`พรอมป์ · ${stepWord} ${it.n}`}
                               text={it.prompt}
                               strong={i === lesson.iterations.length - 1}
                             />
@@ -308,8 +313,8 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                 <h2 id={`re-${lesson.id}`} className="text-2xl md:text-3xl">สะท้อนการเรียนรู้</h2>
                 <p className="mt-4 max-w-3xl leading-relaxed text-[hsl(var(--foreground)/0.92)]">{lesson.tip}</p>
                 <div className="mt-8 grid gap-5 md:grid-cols-2">
-                  <VsCard label={hasIt ? 'รอบที่ 1 · เริ่มต้น' : 'ผลลัพธ์แรก · zero-shot'} text={lesson.result1.summary} />
-                  <VsCard label={hasIt ? `รอบที่ ${lesson.iterations.length} · ฉบับสุดท้าย` : 'ผลลัพธ์ใหม่ · few-shot'} text={lesson.result2.summary} good />
+                  <VsCard label={hasIt ? `${stepWord} 1 · เริ่มต้น` : 'ผลลัพธ์แรก · zero-shot'} text={lesson.result1.summary} />
+                  <VsCard label={hasIt ? `${stepWord} ${lesson.iterations.length} · ฉบับสุดท้าย` : 'ผลลัพธ์ใหม่ · few-shot'} text={lesson.result2.summary} good />
                 </div>
                 <Reveal delay={0.22}>
                   <p className="mt-6 rounded-xl border border-[hsl(var(--accent)/0.35)] bg-[hsl(var(--accent)/0.08)] p-4 text-sm leading-relaxed">
