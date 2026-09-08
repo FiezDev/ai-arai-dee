@@ -1,5 +1,6 @@
 import { MotionConfig } from 'framer-motion';
 import { lessons } from '../lessons';
+import { useLiveLesson } from '../live-text';
 import { Boundary, Nav, Plate, PromptCard, Figure, Reveal, ScrollProgress, asset, CodeCard, rawText } from './ui';
 
 type Lesson = (typeof lessons)[number];
@@ -37,7 +38,8 @@ function VsCard({ label, text, good }: { label: string; text: string; good?: boo
   );
 }
 
-export default function LessonView({ lesson }: { lesson: Lesson }) {
+export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
+  const lesson = useLiveLesson(baked);
   const hasIt = 'iterations' in lesson && lesson.iterations.length > 0;
   const stepWord = 'stepWord' in lesson ? lesson.stepWord : 'รอบที่';
   const idx = lessons.findIndex((l) => l.id === lesson.id);

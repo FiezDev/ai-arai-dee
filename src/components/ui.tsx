@@ -1,4 +1,5 @@
 import { Component, useEffect, useRef, useState, type ReactNode } from 'react';
+import { lt, useLiveText } from '../live-text';
 import {
   motion,
   useInView,
@@ -127,6 +128,7 @@ export function Plate({ src, srcSet, alt, fallbackId, caption }: { src: string; 
 /* ── top pill menu: home + 6 lessons + guide ── */
 export function Nav({ current, lessons }: { current?: string; lessons: readonly { id: string; num: string; nav: string }[] }) {
   const [scrolled, setScrolled] = useState(false);
+  const T = useLiveText();
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.4);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -153,7 +155,7 @@ export function Nav({ current, lessons }: { current?: string; lessons: readonly 
         {lessons.map((l) => (
           <a key={l.id} href={`${base}lesson/${l.id}`} className={current === l.id ? active : normal}>
             <span aria-hidden="true" className="mr-1 text-[hsl(var(--accent)/0.85)]">{l.num}</span>
-            {l.nav}
+            {lt(T, `lesson.${l.id}.nav`, l.nav)}
           </a>
         ))}
         <a href={`${base}canva-mcp-guide.html`} className={normal}>
