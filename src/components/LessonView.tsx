@@ -53,11 +53,11 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
 
         {/* ── lesson header ── */}
         <Boundary>
-          <header className="relative mx-auto max-w-6xl scroll-mt-20 px-6 pb-4 pt-28 md:pt-32">
+          <header className="relative mx-auto max-w-6xl scroll-mt-20 px-6 pb-4 pt-28 md:pt-36">
             <div className="relative">
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-16 right-0 select-none text-[7rem] font-bold leading-none text-[hsl(var(--foreground)/0.07)] md:-top-20 md:text-[10rem]"
+                className="pointer-events-none absolute -top-16 right-0 select-none text-[7rem] font-bold leading-none text-[hsl(var(--foreground)/0.07)] md:-top-24 md:text-[10rem]"
               >
                 {lesson.num}
               </span>
@@ -67,7 +67,6 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                 <p className="mt-5 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.body}</p>
               </Reveal>
             </div>
-            <Plate src={asset(lesson.plate)} alt={lesson.plateAlt} fallbackId={lesson.id} caption={lesson.plateCap} />
           </header>
         </Boundary>
 
@@ -106,30 +105,42 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
           </section>
         </Boundary>
 
-        {/* ── round 2: few-shot ── */}
+        {/* ── round 2: few-shot — the new result lands here, after the dialogue ── */}
         <Boundary>
           <section aria-labelledby={`r2-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
             <Reveal>
               <p className="kicker">รอบที่ 2</p>
               <h2 id={`r2-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">พรอมป์ใหม่ (few-shot) และผลลัพธ์</h2>
             </Reveal>
-            <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
-              <Reveal delay={0.08}>
-                <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
-              </Reveal>
-              <Reveal delay={0.16}>
-                {lesson.result2.file ? (
-                  <Figure file={lesson.result2.file} cap={lesson.result2.cap} alt={lesson.result2.cap} tall />
-                ) : (
-                  <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
-                )}
-              </Reveal>
-            </div>
-            {lesson.result2.file ? (
-              <Reveal delay={0.2}>
-                <p className="mt-4 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.result2.summary}</p>
-              </Reveal>
-            ) : null}
+            {lesson.plate ? (
+              <>
+                <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
+                  <Reveal delay={0.08}>
+                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                  </Reveal>
+                  <Reveal delay={0.16}>
+                    <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
+                  </Reveal>
+                </div>
+                <Reveal delay={0.2}>
+                  <Plate src={asset(lesson.plate)} alt={lesson.plateAlt} fallbackId={lesson.id} caption={lesson.plateCap} />
+                </Reveal>
+              </>
+            ) : (
+              <>
+                <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
+                  <Reveal delay={0.08}>
+                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                  </Reveal>
+                  <Reveal delay={0.16}>
+                    <Figure file={lesson.result2.file || undefined} cap={lesson.result2.cap} alt={lesson.result2.cap} tall />
+                  </Reveal>
+                </div>
+                <Reveal delay={0.2}>
+                  <p className="mt-4 text-sm leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.result2.summary}</p>
+                </Reveal>
+              </>
+            )}
           </section>
         </Boundary>
 
