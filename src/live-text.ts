@@ -1,17 +1,34 @@
 import { useEffect, useMemo, useReducer } from 'react';
 
 // ─ real-time text layer ─────────────────────────────────────────────────────
-// LIVE_TEXT_URL points at a gist raw file holding the same format as
-// src/site-text.md. The page fetches it on load; if it parses, every text
-// swaps to the live version instantly (refresh = new text, no rebuild).
-// If the URL is empty or unreachable, the baked-in text from the build is used.
-export const LIVE_TEXT_URL = ''; // ← ใส่ gist raw URL ที่นี่เพื่อเปิด real-time text
+// LIVE_TEXT_URL points at a JSON file (site-text.json format: flat key→text map).
+// The page fetches it on load; if it parses, every text swaps to the live
+// version instantly (refresh = new text, no rebuild). The old "== key" text
+// format is also accepted. If the URL is empty or unreachable, the baked-in
+// text from the build is used.
+export const LIVE_TEXT_URL = ''; // ← ใส่ URL ของ site-text.json ที่นี่เพื่อเปิด real-time text
 
 let cache: Record<string, string> | null = null;
 let started = false;
 const subs = new Set<() => void>();
 
-export function parseText(src: string): Record<string, string> {
+export function parseText(src: string): Record<string, string> | null {
+  const s = src.trim();
+  if (s.startsWith('{')) {
+    try {
+      const obj: unknown = JSON.parse(s);
+      const out: Record<string, string> = {};
+      if (obj && typeof obj === 'object') {
+        for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+          if (typeof v === 'string') out[k] = v;
+        }
+      }
+      return out;
+    } catch {
+      return null; // broken JSON → keep baked text
+    }
+  }
+  // legacy "== key" format
   const out: Record<string, string> = {};
   let key: string | null = null;
   let buf: string[] = [];
@@ -19,7 +36,7 @@ export function parseText(src: string): Record<string, string> {
     if (key !== null) out[key] = buf.join('\n').replace(/^\n+|\n+$/g, '');
     buf = [];
   };
-  for (const line of src.split(/\r?\n/)) {
+  for (const line of s.split(/\r?\n/)) {
     const m = /^== (.+)$/.exec(line);
     if (m) {
       flush();
@@ -42,8 +59,11 @@ export function useLiveText(): Record<string, string> | null {
       fetch(bust, { cache: 'no-store' })
         .then((r) => (r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`))))
         .then((src) => {
-          cache = parseText(src);
-          subs.forEach((f) => f());
+          const parsed = parseText(src);
+          if (parsed) {
+            cache = parsed;
+            subs.forEach((f) => f());
+          }
         })
         .catch(() => {
           /* keep baked text */

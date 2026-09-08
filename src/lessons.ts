@@ -1,34 +1,13 @@
 // lessons.ts — โครงบทเรียน 6 แง่ (id/รูป/ไฟล์/ลิงก์ อยู่ที่นี่)
-// ข้อความทั้งหมด (หัวเรื่อง เนื้อหา พรอมป์ คำอธิบาย) อยู่ใน site-text.md — แก้ที่ไฟล์นั้นได้เลย
-import raw from './site-text.md?raw';
+// ข้อความทั้งหมด (หัวเรื่อง เนื้อหา พรอมป์ คำอธิบาย) อยู่ใน site-text.json — แก้ที่ไฟล์นั้นได้เลย
+import siteText from './site-text.json';
 
-function parseText(src: string): Record<string, string> {
-  const out: Record<string, string> = {};
-  let key: string | null = null;
-  let buf: string[] = [];
-  const flush = () => {
-    if (key !== null) out[key] = buf.join('\n').replace(/^\n+|\n+$/g, '');
-    buf = [];
-  };
-  for (const line of src.split(/\r?\n/)) {
-    const m = /^== (.+)$/.exec(line);
-    if (m) {
-      flush();
-      key = m[1].trim();
-    } else if (key !== null) {
-      buf.push(line);
-    }
-  }
-  flush();
-  return out;
-}
-
-const T = parseText(raw);
+const T = siteText as Record<string, string>;
 const warned = new Set<string>();
 const t = (k: string): string => {
   if (!(k in T) && !warned.has(k)) {
     warned.add(k);
-    console.warn(`[site-text] ไม่เจอ key นี้ใน site-text.md: ${k}`);
+    console.warn(`[site-text] ไม่เจอ key นี้ใน site-text.json: ${k}`);
   }
   return T[k] ?? '';
 };
