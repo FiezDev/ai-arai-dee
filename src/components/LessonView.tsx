@@ -287,6 +287,11 @@ export default function LessonView({ lesson }: { lesson: Lesson }) {
                   <VsCard label={hasIt ? 'รอบที่ 1 · เริ่มต้น' : 'ผลลัพธ์แรก · zero-shot'} text={lesson.result1.summary} />
                   <VsCard label={hasIt ? `รอบที่ ${lesson.iterations.length} · ฉบับสุดท้าย` : 'ผลลัพธ์ใหม่ · few-shot'} text={lesson.result2.summary} good />
                 </div>
+                <Reveal delay={0.22}>
+                  <p className="mt-6 rounded-xl border border-[hsl(var(--accent)/0.35)] bg-[hsl(var(--accent)/0.08)] p-4 text-sm leading-relaxed">
+                    <span className="font-medium text-[hsl(var(--accent))]">งานต่อยอด:</span> {lesson.future}
+                  </p>
+                </Reveal>
               </div>
             </Reveal>
           </section>
