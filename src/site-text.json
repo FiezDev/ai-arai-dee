@@ -15,7 +15,7 @@
   "lesson.image.itHeading": "5 รอบ — จาก Prompt รวมภาพ สู่ Meme ที่ใช้จริง",
   "lesson.image.iter.1.delta": "วางโครงหลักของภาพ",
   "lesson.image.iter.1.prompt": "Use the first pic as a character reference, and the background and picture style of the second pic.\nFinal pic will be:\n- background and style of the second pic\n- character of the first pic\n- has a chat bubble of the third pic, change the text to \"ไปทำงาน\"\n- has a text at top center \"สวัสดีวันจันทร์\"",
-  "lesson.image.iter.1.cap": "รอบ 1: มันจับโครงได้ค่อนข้างครบเลย ตัวละคร ฉากหลัง สไตล์ chatbubble และข้อความบนมาทั้งหมด — แต่รู้สึกว่ายังขาดอะไรบางอย่างให้ภาพมัน \"มีเรื่องเล่า\" กว่านี้",
+  "lesson.image.iter.1.cap": "รอบ 1: มันจับโครงได้ค่อนข้างครบเลย ตัวละคร ฉากหลัง สไตล์ chatbubble และข้อความด้านบนมาทั้งหมด — แต่รู้สึกว่ายังขาดอะไรบางอย่างให้ภาพมัน \"มีเรื่องเล่า\" กว่านี้",
   "lesson.image.iter.2.delta": "เพิ่มข้อความเล็กใต้ chatbubble",
   "lesson.image.iter.2.prompt": "Use the first pic as a character reference, and the background and picture style of the second pic.\nFinal pic will be:\n- background and style of the second pic\n- character of the first pic\n- has a chat bubble of the third pic, change the text to \"ไปทำงาน\"\n- has a text at top center \"สวัสดีวันจันทร์\"\n- has a little text below the chat bubble saying \".....ที่เรารักกันเถอะครับ\"",
   "lesson.image.iter.2.cap": "รอบ 2: ได้บรรทัดประโยคหวาน ๆ ใต้บับลีมาแล้ว ภาพเริ่มมีอารมณ์ขันขึ้นเยอะ แต่จุดที่ยังค้างคาใจคือตัวละครยังดู \"ตัวคนละภาพ\" กับฉากและสไตล์อยู่ดี",
