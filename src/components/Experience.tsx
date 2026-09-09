@@ -275,14 +275,6 @@ export default function Experience() {
         <Boundary>
           <CTA />
         </Boundary>
-        <footer className="mx-auto max-w-6xl px-6 pb-10 pt-4 text-center text-sm text-[hsl(var(--muted-foreground))]">
-          <p>
-            ใช้ AI ทำอะไรดี · {content.cta.creditsLine} —{' '}
-            <a className="underline decoration-[hsl(var(--accent))] underline-offset-4" href="credits.md">
-              {content.cta.creditsLink}
-            </a>
-          </p>
-        </footer>
       </main>
     </MotionConfig>
   );
