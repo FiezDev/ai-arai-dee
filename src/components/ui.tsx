@@ -158,9 +158,6 @@ export function Nav({ current, lessons }: { current?: string; lessons: readonly 
             {lt(T, `lesson.${l.id}.nav`, l.nav)}
           </a>
         ))}
-        <a href={`${base}canva-mcp-guide.html`} className={normal}>
-          คู่มือ Canva
-        </a>
       </div>
     </nav>
   );

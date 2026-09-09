@@ -117,7 +117,7 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
             <Boundary>
               <section aria-labelledby={`it-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
-                  <p className="kicker">{'itKicker' in lesson ? lesson.itKicker : 'วนปรับพรอมป์'}</p>
+                  <p className="kicker">{'itKicker' in lesson ? lesson.itKicker : 'วนปรับ prompt'}</p>
                   <h2 id={`it-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
                     {'itHeading' in lesson
                       ? lesson.itHeading

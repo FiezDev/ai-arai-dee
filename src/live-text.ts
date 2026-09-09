@@ -6,7 +6,7 @@ import { useEffect, useMemo, useReducer } from 'react';
 // version instantly (refresh = new text, no rebuild). The old "== key" text
 // format is also accepted. If the URL is empty or unreachable, the baked-in
 // text from the build is used.
-export const LIVE_TEXT_URL = ''; // ← ใส่ URL ของ site-text.json ที่นี่เพื่อเปิด real-time text
+export const LIVE_TEXT_URL = 'https://raw.githubusercontent.com/FiezDev/ai-arai-dee/main/src/site-text.json'; // ← ใส่ URL ของ site-text.json ที่นี่เพื่อเปิด real-time text
 
 let cache: Record<string, string> | null = null;
 let started = false;
