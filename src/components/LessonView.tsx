@@ -148,7 +148,7 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
                         <div className={`grid items-stretch gap-6 md:grid-cols-2 ${i % 2 === 1 ? 'md:[direction:rtl]' : ''}`}>
                           <div className="md:[direction:ltr]">
                             <PromptCard
-                              label={`พรอมป์ · ${stepWord} ${it.n}`}
+                              label={`Prompt · ${stepWord} ${it.n}`}
                               text={it.prompt}
                               strong={i === lesson.iterations.length - 1}
                             />
@@ -196,11 +196,11 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
           <section aria-labelledby={`r1-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
             <Reveal>
               <p className="kicker">รอบที่ 1</p>
-              <h2 id={`r1-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">พรอมป์แรก (zero-shot) และผลลัพธ์</h2>
+              <h2 id={`r1-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">Prompt แรก (zero-shot) และผลลัพธ์</h2>
             </Reveal>
             <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
               <Reveal delay={0.08}>
-                <PromptCard label="พรอมป์แรก · zero-shot" text={lesson.prompt1} />
+                <PromptCard label="Prompt แรก · zero-shot" text={lesson.prompt1} />
               </Reveal>
               <Reveal delay={0.16}>
                 <Figure file={lesson.result1.file || undefined} cap={lesson.result1.cap} alt={lesson.result1.cap} tall={!lesson.result1.file} contain={!!lesson.result1.file} />
@@ -213,7 +213,7 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
         <Boundary>
           <section aria-labelledby={`qa-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
             <Reveal>
-              <p className="kicker">ปรับพรอมป์ด้วยการถาม</p>
+              <p className="kicker">ปรับ Prompt ด้วยการถาม</p>
               <h2 id={`qa-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">ถาม–ตอบ เพื่อดึงรายละเอียดที่ควรระบุ</h2>
             </Reveal>
             <div className="mt-8 grid gap-5 md:grid-cols-2">
@@ -231,13 +231,13 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
           <section aria-labelledby={`r2-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
             <Reveal>
               <p className="kicker">รอบที่ 2</p>
-              <h2 id={`r2-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">พรอมป์ใหม่ (few-shot) และผลลัพธ์</h2>
+              <h2 id={`r2-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">Prompt ใหม่ (few-shot) และผลลัพธ์</h2>
             </Reveal>
             {lesson.plate ? (
               <>
                 <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
                   <Reveal delay={0.08}>
-                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                    <PromptCard label="Prompt ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
                   </Reveal>
                   <Reveal delay={0.16}>
                     <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
@@ -251,7 +251,7 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
               <>
                 <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
                   <Reveal delay={0.08}>
-                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                    <PromptCard label="Prompt ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
                   </Reveal>
                   <Reveal delay={0.16}>
                     <VsCard label="ผลลัพธ์ใหม่ · few-shot" text={lesson.result2.summary} good />
@@ -265,7 +265,7 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
               <>
                 <div className="mt-8 grid items-stretch gap-6 md:grid-cols-2">
                   <Reveal delay={0.08}>
-                    <PromptCard label="พรอมป์ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
+                    <PromptCard label="Prompt ใหม่ · few-shot (สังเคราะห์จากบทสนทนา)" text={lesson.prompt2} strong />
                   </Reveal>
                   <Reveal delay={0.16}>
                     <Figure file={lesson.result2.file || undefined} cap={lesson.result2.cap} alt={lesson.result2.cap} tall contain={!!lesson.result2.file} />
