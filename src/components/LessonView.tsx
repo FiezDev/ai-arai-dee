@@ -41,7 +41,7 @@ function VsCard({ label, text, good }: { label: string; text: string; good?: boo
 export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
   const lesson = useLiveLesson(baked);
   const hasIt = 'iterations' in lesson && lesson.iterations.length > 0;
-  const stepWord = 'stepWord' in lesson ? lesson.stepWord : 'รอบที่';
+  const stepWord = ('stepWord' in lesson && lesson.stepWord) || 'รอบที่';
   const idx = lessons.findIndex((l) => l.id === lesson.id);
   const prev = idx > 0 ? lessons[idx - 1] : undefined;
   const next = idx < lessons.length - 1 ? lessons[idx + 1] : undefined;
@@ -81,9 +81,9 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
             <Boundary>
               <section aria-labelledby={`refs-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
-                  <p className="kicker">{'refsKicker' in lesson ? lesson.refsKicker : 'เตรียมของ'}</p>
+                  <p className="kicker">{'refsKicker' in lesson && lesson.refsKicker ? lesson.refsKicker : 'เตรียมของ'}</p>
                   <h2 id={`refs-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
-                    {'refsHeading' in lesson ? lesson.refsHeading : 'รูปอ้างอิงทั้งสาม'}
+                    {'refsHeading' in lesson && lesson.refsHeading ? lesson.refsHeading : 'รูปอ้างอิงทั้งสาม'}
                   </h2>
                   <p className="mt-3 max-w-3xl leading-relaxed text-[hsl(var(--muted-foreground))]">{lesson.refsIntro}</p>
                 </Reveal>
@@ -117,9 +117,9 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
             <Boundary>
               <section aria-labelledby={`it-${lesson.id}`} className="mx-auto max-w-6xl px-6 py-10 md:py-14">
                 <Reveal>
-                  <p className="kicker">{'itKicker' in lesson ? lesson.itKicker : 'วนปรับ prompt'}</p>
+                  <p className="kicker">{'itKicker' in lesson && lesson.itKicker ? lesson.itKicker : 'วนปรับ prompt'}</p>
                   <h2 id={`it-${lesson.id}`} className="mt-3 text-2xl md:text-3xl">
-                    {'itHeading' in lesson
+                    {'itHeading' in lesson && lesson.itHeading
                       ? lesson.itHeading
                       : `${lesson.iterations.length} รอบ — จากพรอมป์รวมภาพ สู่มีมที่ใช้จริง`}
                   </h2>

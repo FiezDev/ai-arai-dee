@@ -27,6 +27,8 @@ export const lessons = [
       { file: 'ref-bubble.webp', label: t('lesson.image.ref.3.label'), note: t('lesson.image.ref.3.note') },
     ],
     iterationsIntro: t('lesson.image.iterationsIntro'),
+    itKicker: t('lesson.image.itKicker'),
+    itHeading: t('lesson.image.itHeading'),
     iterations: [
       { n: 1, delta: t('lesson.image.iter.1.delta'), prompt: t('lesson.image.iter.1.prompt'), img: 'iter-1.jpg', cap: t('lesson.image.iter.1.cap') },
       { n: 2, delta: t('lesson.image.iter.2.delta'), prompt: t('lesson.image.iter.2.prompt'), img: 'iter-2.jpg', cap: t('lesson.image.iter.2.cap') },
