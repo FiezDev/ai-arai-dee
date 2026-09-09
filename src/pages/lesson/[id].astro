@@ -6,10 +6,10 @@ import LessonView from '../../components/LessonView';
 import { lessons } from '../../lessons';
 
 export function getStaticPaths() {
-  return lessons.map((lesson) => ({
-    params: { id: lesson.id },
-    props: { lesson },
-  }));
+ return lessons.map((lesson) => ({
+ params: { id: lesson.id },
+ props: { lesson },
+ }));
 }
 
 const { lesson } = Astro.props;
@@ -17,25 +17,25 @@ const { lesson } = Astro.props;
 
 <!doctype html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-    <meta
-      name="description"
-      content={`การบ้านแง่ที่ ${parseInt(lesson.num)} — ${lesson.heading}: พรอมป์แรก (zero-shot) ผลลัพธ์ ถาม-ตอบ พรอมป์ใหม่ (few-shot) และสะท้อนการเรียนรู้`}
-    />
-    <meta property="og:title" content={`แง่ที่ ${parseInt(lesson.num)} ${lesson.heading} — พลังของ Prompt`} />
-    <meta property="og:description" content="จาก Zero-shot สู่ Few-shot พร้อมผลงานจริง" />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={`https://fiezdev.github.io/ai-arai-dee/lesson/${lesson.id}/`} />
-    <meta property="og:image" content="https://fiezdev.github.io/ai-arai-dee/og.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href={`https://fiezdev.github.io/ai-arai-dee/lesson/${lesson.id}/`} />
-    <link rel="icon" type="image/svg+xml" href="/ai-arai-dee/favicon.svg" />
-    <title>{`แง่ที่ ${parseInt(lesson.num)} ${lesson.heading} — พลังของ Prompt`}</title>
-  </head>
-  <body class="grain">
-    <LessonView client:load lesson={lesson} />
-  </body>
+ <head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta name="generator" content={Astro.generator} />
+ <meta
+ name="description"
+ content={`การบ้านแง่ที่ ${parseInt(lesson.num)} — ${lesson.heading}: Prompt แรก (zero-shot) ผลลัพธ์ ถาม-ตอบ Prompt ใหม่ (few-shot) และสะท้อนการเรียนรู้`}
+ />
+ <meta property="og:title" content={`แง่ที่ ${parseInt(lesson.num)} ${lesson.heading} — พลังของ Prompt`} />
+ <meta property="og:description" content="จาก Zero-shot สู่ Few-shot พร้อมผลงานจริง" />
+ <meta property="og:type" content="article" />
+ <meta property="og:url" content={`https://fiezdev.github.io/ai-arai-dee/lesson/${lesson.id}/`} />
+ <meta property="og:image" content="https://fiezdev.github.io/ai-arai-dee/og.jpg" />
+ <meta name="twitter:card" content="summary_large_image" />
+ <link rel="canonical" href={`https://fiezdev.github.io/ai-arai-dee/lesson/${lesson.id}/`} />
+ <link rel="icon" type="image/svg+xml" href="/ai-arai-dee/favicon.svg" />
+ <title>{`แง่ที่ ${parseInt(lesson.num)} ${lesson.heading} — พลังของ Prompt`}</title>
+ </head>
+ <body class="grain">
+ <LessonView client:load lesson={lesson} />
+ </body>
 </html>
