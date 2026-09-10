@@ -1,4 +1,5 @@
 import { MotionConfig } from 'framer-motion';
+import { Zap } from 'lucide-react';
 import { lessons } from '../lessons';
 import { useLiveLesson } from '../live-text';
 import { Boundary, Nav, Plate, PromptCard, Figure, Reveal, ScrollProgress, asset, CodeCard, rawText } from './ui';
@@ -353,7 +354,8 @@ export default function LessonView({ lesson: baked }: { lesson: Lesson }) {
                 <span />
               )}
               <a href={base} className={pill}>
-                ⚡ กลับหน้าหลัก
+                <Zap aria-hidden="true" className="size-4" strokeWidth={2.25} />
+                กลับหน้าหลัก
               </a>
               {next ? (
                 <a href={`${base}lesson/${next.id}`} className={pill}>

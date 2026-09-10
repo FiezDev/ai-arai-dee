@@ -1,4 +1,5 @@
 import { Component, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Zap, ImageIcon, LineChart, Workflow, FileText, Notebook, Globe, type LucideIcon } from 'lucide-react';
 import { lt, useLiveText } from '../live-text';
 import {
   motion,
@@ -126,6 +127,15 @@ export function Plate({ src, srcSet, alt, fallbackId, caption }: { src: string; 
 }
 
 /* ── top pill menu: home + 6 lessons + guide ── */
+/* mobile (<md): icon-only pills so the whole menu fits without scrolling */
+const navIcon: Record<string, LucideIcon> = {
+  image: ImageIcon,
+  desmos: LineChart,
+  mermaid: Workflow,
+  latex: FileText,
+  slides: Notebook,
+  web: Globe,
+};
 export function Nav({ current, lessons }: { current?: string; lessons: readonly { id: string; num: string; nav: string }[] }) {
   const [scrolled, setScrolled] = useState(false);
   const T = useLiveText();
@@ -136,9 +146,10 @@ export function Nav({ current, lessons }: { current?: string; lessons: readonly 
   }, []);
   const base = import.meta.env.BASE_URL;
   const pill =
-    'whitespace-nowrap rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors';
+    'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-2 font-medium transition-colors md:px-3 md:py-1.5 md:text-[13px] md:leading-normal';
   const normal = `${pill} text-[hsl(var(--foreground)/0.8)] hover:bg-[hsl(var(--surface-2))] hover:text-[hsl(var(--foreground))]`;
   const active = `${pill} bg-[hsl(var(--surface-2))] text-[hsl(var(--accent))]`;
+  const home = lt(T, 'nav.home', 'หน้าหลัก');
   return (
     <nav
       aria-label="เมนูบทเรียน"
@@ -146,18 +157,30 @@ export function Nav({ current, lessons }: { current?: string; lessons: readonly 
       style={{ opacity: scrolled ? 1 : 0.9 }}
     >
       <div
-        className="flex max-w-full items-center gap-0.5 overflow-x-auto rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background)/0.78)] px-1.5 py-1 backdrop-blur-md"
+        className="flex max-w-full items-center gap-1 overflow-x-auto rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background)/0.78)] px-1.5 py-1 backdrop-blur-md md:gap-0.5"
         style={{ boxShadow: '0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35)' }}
       >
-        <a href={base} className={!current ? `${pill} text-[hsl(var(--accent))]` : `${pill} text-[hsl(var(--foreground)/0.8)] hover:bg-[hsl(var(--surface-2))]`}>
-          ⚡ หน้าหลัก
+        <a href={base} aria-label={home} title={home} className={!current ? `${pill} text-[hsl(var(--accent))]` : `${pill} text-[hsl(var(--foreground)/0.8)] hover:bg-[hsl(var(--surface-2))]`}>
+          <Zap aria-hidden="true" className="size-4 shrink-0 md:size-3.5" strokeWidth={2.25} />
+          <span className="hidden md:inline">{home}</span>
         </a>
-        {lessons.map((l) => (
-          <a key={l.id} href={`${base}lesson/${l.id}`} className={current === l.id ? active : normal}>
-            <span aria-hidden="true" className="mr-1 text-[hsl(var(--accent)/0.85)]">{l.num}</span>
-            {lt(T, `lesson.${l.id}.nav`, l.nav)}
-          </a>
-        ))}
+        {lessons.map((l) => {
+          const label = lt(T, `lesson.${l.id}.nav`, l.nav);
+          const Icon = navIcon[l.id];
+          return (
+            <a key={l.id} href={`${base}lesson/${l.id}`} aria-label={label} title={label} className={current === l.id ? active : normal}>
+              {Icon ? (
+                <Icon aria-hidden="true" className="size-4 shrink-0 md:hidden" strokeWidth={2} />
+              ) : (
+                <span aria-hidden="true" className="text-[13px] leading-none md:hidden">{l.num}</span>
+              )}
+              <span className="hidden md:inline">
+                <span aria-hidden="true" className="mr-1 text-[hsl(var(--accent)/0.85)]">{l.num}</span>
+                {label}
+              </span>
+            </a>
+          );
+        })}
       </div>
     </nav>
   );
